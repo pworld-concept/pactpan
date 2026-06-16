@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About — PACTPAN Palaver Series 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .mv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      max-width: 900px;
+      margin: 0 auto 3rem;
+    }
+
+    .mv-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.75rem 1.5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .mv-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .mv-card .accent-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+    }
+
+    .mv-card.gold .accent-bar {
+      background: var(--gold);
+    }
+
+    .mv-card.earth .accent-bar {
+      background: var(--earth);
+    }
+
+    .mv-card.forest .accent-bar {
+      background: var(--forest);
+    }
+
+    .mv-card.slate .accent-bar {
+      background: #3A4D5C;
+    }
+
+    .mv-card .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 1rem;
+    }
+
+    .mv-card.gold .icon-circle {
+      background: rgba(184, 134, 11, .12);
+      color: var(--gold);
+    }
+
+    .mv-card.earth .icon-circle {
+      background: rgba(107, 76, 42, .12);
+      color: var(--earth);
+    }
+
+    .mv-card.forest .icon-circle {
+      background: rgba(45, 91, 58, .12);
+      color: var(--forest);
+    }
+
+    .mv-card.slate .icon-circle {
+      background: rgba(58, 77, 92, .12);
+      color: #3A4D5C;
+    }
+
+    .mv-card .card-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 0.35rem;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .mv-card .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--forest-dark);
+      margin: 0 0 0.75rem;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .mv-card .card-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 0.75rem;
+    }
+
+    .mv-card p {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .mv-card p.italic-quote {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1rem;
+    }
+
+    .badge-chip {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(58, 77, 92, .1);
+      color: #3A4D5C;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .goal-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .goal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--forest), var(--gold));
+    }
+
+    .goal-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .goal-num {
+      font-family: 'Lora', serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--cream-dark);
+      line-height: 1;
+      margin-bottom: .4rem;
+    }
+
+    .goal-card h4 {
+      font-size: .95rem;
+      color: var(--forest-dark);
+      margin-bottom: .5rem;
+      font-family: 'Lora', serif;
+      font-weight: 600;
+    }
+
+    .goal-card p {
+      font-size: .82rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .coord-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      justify-content: center;
+    }
+
+    .coord-chip {
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(184, 134, 11, .3);
+      border-radius: 30px;
+      padding: .45rem 1.1rem;
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .82);
+      transition: all .2s;
+    }
+
+    .coord-chip:hover {
+      background: rgba(184, 134, 11, .2);
+      border-color: var(--gold);
+    }
+
+    .about-prose {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .about-prose p {
+      color: var(--text-mid);
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+    }
+
+    .about-prose h3 {
+      font-size: 1.4rem;
+      color: var(--forest-dark);
+      margin: 2rem 0 .8rem;
+    }
+
+    @media(max-width:700px) {
+      .mv-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="js/data.js"></script>
+  <script type="module" src="js/nav-auth.js"></script>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="page-hero-bg"
+      style="background-image:url('https://images.unsplash.com/photo-1508615070457-7baeba4003ab?w=1400&q=80')"></div>
+    <div class="page-hero-inner">
+      <span class="eyebrow" style="color:var(--gold-bright)">About</span>
+      <h1>Renewal of Priestly Ministry in Nigeria</h1>
+      <p>Background, Mission, Vision, and Goals of the PACTPAN Palaver Series</p>
+    </div>
+    <div class="page-hero-leaf"></div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <section class="section" style="background:var(--white)">
+    <div class="section-inner">
+      <div class="about-prose">
+        <div class="divider"></div>
+        <span class="eyebrow">Background</span>
+        <h2 style="font-size:clamp(1.6rem,3vw,2.3rem);color:var(--forest-dark);margin:.5rem 0 1.5rem">What is the
+          Palaver?</h2>
+        <p>Pope Leo recently invited the Church to pray for priests in crisis, reminding us that "the priest is not
+          immune from the struggles of the human condition, but must learn to carry them in communion with Christ and
+          with the People of God." This is a wake-up moment. There are priests in crisis among us — some visible and
+          many invisible.</p>
+        <p>This ongoing formation initiative goes beyond responding to individual crises to the wider context of
+          priestly ministry in Nigeria today. The cultural, political, intellectual, and social conditions within which
+          priests live and minister are rapidly changing. We must also reckon with new religious dynamics, including the
+          attraction of Pentecostal forms of religious enchantment, the rise of healing ministries, and the pressures of
+          financial expectations and fundraising in a complex political climate.</p>
+        <p>Many priests find themselves pulled in multiple directions, striving to meet competing expectations. However,
+          in the midst of parish life and pastoral service, one can still feel deeply isolated — disconnected from God,
+          from one's bishop, from brother priests, and even from the people one serves.</p>
+        <p>We must return to a foundational spiritual truth: <em
+            style="font-family:'Cormorant Garamond',serif;font-size:1.08rem">"You did not choose me, but I chose you"
+            (John 15:16).</em> Our vocation is not self-generated. It is a gift and a responsibility. As <em>Pastores
+            Dabo Vobis</em> reminds us, "the priest is called to live a life of total self-gift, reflecting the charity
+          of the Good Shepherd" (PDV, 23).</p>
+        <p>This national online palaver among priests, bishops, and invited lay collaborators seeks to foster a renewed
+          vision of prophetic servant leadership rooted in personal integrity, communal care, relational resilience, and
+          spiritual and pastoral maturity.</p>
+
+        <h3>Structure</h3>
+        <p>The Palaver consists of <strong>six weekly sessions of two and a half hours each</strong>, spread across six
+          weeks from July to August 2026. Participants are chosen by their local ordinaries or major superiors and are
+          expected to register in advance and attend all sessions.</p>
+        <p>Participants who complete all six sessions and successfully undertake the self-care audit and the Vital
+          Church Pastoral Situation Analysis shall receive a <strong>Certificate of Honor</strong>, jointly presented by
+          the Catholic Secretariat of Nigeria (CSN), PACTPAN, CATHAN, the Association of Nigerian Catholic Priests, and
+          Veritas University, Abuja.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION VISION -->
+  <section class="section" style="background:var(--cream)">
+    <div class="section-inner">
+      <div class="section-hd">
+        <div class="divider" style="margin:0 auto 1rem"></div>
+        <span class="eyebrow">Identity</span>
+        <h2>Mission &amp; Vision</h2>
+      </div>
+      <div class="mv-grid">
+
+        <!-- MISSION -->
+        <div class="mv-card gold">
+          <div class="accent-bar"></div>
+          <div class="icon-circle">&#9728;</div>
+          <p class="card-eyebrow">Mission</p>
+          <p class="card-title">Our Purpose</p>
+          <div class="card-divider"></div>
+          <p>To foster a renewed vision of prophetic servant leadership in Nigerian priests, rooted in personal
+            integrity,
+            communal care, relational resilience, and spiritual and pastoral maturity — because only a healthy
+            priesthood
+            can sustain a truly vital Church.</p>
+        </div>
+
+        <!-- VISION -->
+        <div class="mv-card forest">
+          <div class="accent-bar"></div>
+          <div class="icon-circle">&#9685;</div>
+          <p class="card-eyebrow">Vision</p>
+          <p class="card-title">What We See</p>
+          <div class="card-divider"></div>
+          <p>A Nigerian Church whose priests are fully alive in Christ, deeply rooted in fraternal communion, and
+            courageously engaged with their people and society — prophetic servant leaders who model the charity of the
+            Good Shepherd in every dimension of their lives.</p>
+        </div>
+
+        <!-- GENERAL THEME -->
+        <div class="mv-card earth">
+          <div class="accent-bar"></div>
+          <div class="icon-circle">&#10022;</div>
+          <p class="card-eyebrow">General Theme</p>
+          <p class="card-title">Palaver 2026 Focus</p>
+          <div class="card-divider"></div>
+          <p class="italic-quote">Priests as Prophetic Servant Leaders in a Vital Church in Nigeria: Caring for Self,
+            One Another, and God's People</p>
+        </div>
+
+        <!-- CERTIFICATE -->
+        <div class="mv-card slate">
+          <div class="accent-bar"></div>
+          <div class="icon-circle">&#9650;</div>
+          <p class="card-eyebrow">Certificate</p>
+          <p class="card-title">Recognition of Formation</p>
+          <div class="card-divider"></div>
+          <p>Participants completing all six sessions and audits receive a joint <strong>Certificate of Honor</strong>
+            — a true mark of formation accomplished.</p>
+          <div class="badge-row">
+            <span class="badge-chip">CSN</span>
+            <span class="badge-chip">PACTPAN</span>
+            <span class="badge-chip">CATHAN</span>
+            <span class="badge-chip">Veritas University</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 GOALS -->
+  <section class="section" style="background:var(--white)">
+    <div class="section-inner">
+      <div class="section-hd">
+        <div class="divider" style="margin:0 auto 1rem"></div>
+        <span class="eyebrow">Goals &amp; Objectives</span>
+        <h2>Eight Integrated Pillars of Renewal</h2>
+        <p>The palaver is built around eight deeply connected goals, each reinforcing the others in the pursuit of
+          priestly flourishing.</p>
+      </div>
+      <div class="goals-grid" id="goals-grid"></div>
+    </div>
+  </section>
+
+  <!-- COORDINATORS -->
+  <section style="background:var(--forest-dark);padding:4rem 1.5rem;text-align:center">
+    <p class="eyebrow" style="color:var(--gold-bright);margin-bottom:1.5rem;text-align:center">Coordinating Team</p>
+    <div class="coord-wrap" id="coord-wrap"></div>
+  </section>
+
+  <script>
+    injectShell();
+
+    const GOALS = [
+      ["01", "Spiritual Identity",
+        "Re-grounding priestly life in divine calling and communion with Christ, restoring joy in ministry as a lived relationship rather than a functional obligation."
+      ],
+      ["02", "Holistic Self-Care",
+        "Equipping priests with practical tools for physical, emotional, psychological, and spiritual wellbeing — addressing burnout, stress, health, and unhealthy habits."
+      ],
+      ["03", "Priestly Fraternity",
+        "Creating space for honest conversation, mutual support, and rebuilding trust among priests and with bishops — overcoming isolation through shared responsibility."
+      ],
+      ["04", "Ethical Integrity",
+        "Addressing accountability, safeguarding, use of authority, and stewardship of resources — forming priests to live credible and transparent lives."
+      ],
+      ["05", "Pastoral Leadership",
+        "Providing skills for engaging contemporary challenges — political realities, social media, communication, and public witness in a rapidly changing Nigeria."
+      ],
+      ["06", "Relational Capacity",
+        "Helping priests improve relationships with parishioners, fellow clergy, bishops, and the poor — through listening, conflict resolution, and collaboration."
+      ],
+      ["07", "Religious Dynamics",
+        "Offering pastoral strategies for engaging Pentecostal movements, healing ministries, and shifting religious affiliations with renewed Catholic witness."
+      ],
+      ["08", "Ongoing Formation",
+        "Encouraging lifelong formation — 'priestly formation does not end at ordination but continues throughout life' (PDV, 70) — through mentorship and accountability."
+      ],
+    ];
+    const gg = document.getElementById('goals-grid');
+    GOALS.forEach(([n, t, d]) => {
+      gg.innerHTML += `<div class="goal-card"><div class="goal-num">${n}</div><h4>${t}</h4><p>${d}</p></div>`;
+    });
+
+    const cw = document.getElementById('coord-wrap');
+    COORDINATORS.forEach(c => {
+      cw.innerHTML += `<div class="coord-chip">${c}</div>`;
+    });
+  </script>
+</body>
+
+</html>

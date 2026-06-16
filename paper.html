@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Paper - PACTPAN Palaver Series 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .paper-layout {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .paper-main {
+            min-width: 0;
+        }
+
+        /* Header */
+        .paper-header {
+            background: var(--white);
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .paper-session-tag {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--earth);
+            margin-bottom: .8rem;
+            display: block;
+        }
+
+        .paper-title-lg {
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            color: var(--forest-dark);
+            line-height: 1.3;
+            margin-bottom: .8rem;
+        }
+
+        .paper-author-row {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .pa-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, .7);
+            flex-shrink: 0;
+        }
+
+        .pa-name {
+            font-size: .88rem;
+            font-weight: 600;
+            color: var(--forest-dark);
+        }
+
+        .pa-role {
+            font-size: .74rem;
+            color: var(--text-muted);
+        }
+
+        .paper-badges {
+            display: flex;
+            gap: .6rem;
+            flex-wrap: wrap;
+        }
+
+        .paper-badge {
+            font-size: .68rem;
+            padding: .22rem .7rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .pb-session {
+            background: rgba(30, 77, 43, .1);
+            color: var(--forest);
+        }
+
+        .pb-type {
+            background: rgba(59, 130, 246, .1);
+            color: #2563eb;
+        }
+
+        .pb-access {
+            background: rgba(34, 197, 94, .1);
+            color: #15803d;
+        }
+
+        /* Content area */
+        .paper-content {
+            background: var(--white);
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+        }
+
+        /* PDF viewer */
+        .pdf-viewer {
+            width: 100%;
+            height: 70vh;
+            min-height: 500px;
+            border-radius: var(--r);
+            border: none;
+        }
+
+        .pdf-download {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: var(--cream);
+            border-radius: var(--r);
+        }
+
+        .pdf-download a {
+            color: var(--forest);
+            font-weight: 600;
+            font-size: .88rem;
+        }
+
+        .pdf-download span {
+            font-size: .8rem;
+            color: var(--text-muted);
+        }
+
+        /* Video */
+        .video-wrap {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: var(--r);
+            margin-bottom: 1.5rem;
+            background: #000;
+        }
+
+        .video-wrap iframe,
+        .video-wrap video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: var(--r);
+        }
+
+        .video-description {
+            font-size: .92rem;
+            color: var(--text-mid);
+            line-height: 1.85;
+            margin-top: 1.5rem;
+        }
+
+        /* Long-form text */
+        .paper-body {
+            font-size: 1rem;
+            color: var(--text-mid);
+            line-height: 1.95;
+        }
+
+        .paper-body h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.4rem;
+            color: var(--forest-dark);
+            margin: 2rem 0 .8rem;
+        }
+
+        .paper-body p {
+            margin-bottom: 1.2rem;
+        }
+
+        .paper-body ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .paper-body li {
+            margin-bottom: .4rem;
+        }
+
+        .paper-body blockquote {
+            border-left: 3px solid var(--gold);
+            padding-left: 1.2rem;
+            margin: 1.5rem 0;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--forest);
+        }
+
+        .paper-body strong {
+            color: var(--forest-dark);
+        }
+
+        /* Gate */
+        .paper-gate {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .gate-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .gate-title {
+            font-size: 1.4rem;
+            color: var(--forest-dark);
+            margin-bottom: .8rem;
+        }
+
+        .gate-sub {
+            font-size: .9rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Sidebar */
+        .paper-sidebar {
+            position: sticky;
+            top: 88px;
+        }
+
+        .sidebar-card {
+            background: var(--white);
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .sidebar-card h4 {
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .related-paper {
+            display: flex;
+            gap: .8rem;
+            padding: .8rem 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .related-paper:last-child {
+            border-bottom: none;
+        }
+
+        .rp-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .rp-title {
+            font-size: .78rem;
+            font-weight: 500;
+            color: var(--forest-dark);
+            line-height: 1.4;
+        }
+
+        .rp-author {
+            font-size: .7rem;
+            color: var(--text-muted);
+            margin-top: .15rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--forest);
+            font-size: .82rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            color: var(--gold);
+        }
+
+        /* Loading */
+        .paper-loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+        }
+
+        @media(max-width:860px) {
+            .paper-layout {
+                grid-template-columns: 1fr
+            }
+
+            .paper-sidebar {
+                position: static
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div style="padding-top:68px">
+        <section class="section" style="padding-top:2rem">
+            <div class="section-inner">
+                <a href="papers.html" class="back-btn">&#8592; Back to all papers</a>
+                <div id="paper-loading" class="paper-loading">&#128196; Loading paper…</div>
+                <div id="paper-wrap" style="display:none">
+                    <div class="paper-layout">
+                        <div class="paper-main">
+                            <!-- HEADER -->
+                            <div class="paper-header">
+                                <span class="paper-session-tag" id="p-session"></span>
+                                <h1 class="paper-title-lg" id="p-title"></h1>
+                                <div class="paper-author-row">
+                                    <div class="pa-avatar" id="p-avatar"></div>
+                                    <div>
+                                        <div class="pa-name" id="p-author"></div>
+                                        <div class="pa-role" id="p-role"></div>
+                                    </div>
+                                </div>
+                                <div class="paper-badges" id="p-badges"></div>
+                            </div>
+                            <!-- CONTENT -->
+                            <div class="paper-content" id="paper-content">
+                                <div class="paper-gate" id="paper-gate" style="display:none">
+                                    <div class="gate-icon">&#128274;</div>
+                                    <div class="gate-title">Registration Required</div>
+                                    <p class="gate-sub">This paper is available exclusively to registered participants
+                                        of the PACTPAN Palaver Series 2026.</p>
+                                    <a href="register.html" class="btn btn-forest">Register Now &#8594;</a>
+                                    <p style="margin-top:1rem;font-size:.8rem;color:var(--text-muted)">Already
+                                        registered? <a href="register.html#login"
+                                            style="color:var(--forest);font-weight:600">Sign in here</a></p>
+                                </div>
+                                <div id="paper-body-wrap"></div>
+                            </div>
+                        </div>
+                        <!-- SIDEBAR -->
+                        <aside class="paper-sidebar">
+                            <div class="sidebar-card">
+                                <h4>Other Papers</h4>
+                                <div id="related-papers"></div>
+                            </div>
+                            <div class="sidebar-card">
+                                <h4>About the Series</h4>
+                                <p style="font-size:.8rem;color:var(--text-muted);line-height:1.7">Six weekly formation
+                                    sessions from July to August 2026, jointly presented by PACTPAN, CSN, CATHAN, and
+                                    Veritas University Abuja.</p>
+                                <a href="sessions.html"
+                                    style="font-size:.78rem;font-weight:600;color:var(--forest);display:block;margin-top:.8rem">View
+                                    full programme &#8594;</a>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script>
+        injectShell();
+    </script>
+    <script type="module" src="js/nav-auth.js"></script>
+
+    <script type="module">
+        import { auth, db } from './js/firebase.js';
+import { onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { collection, getDocs, doc, getDoc, query, where, updateDoc, arrayUnion }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* Get paper id from URL */
+const params  = new URLSearchParams(location.search);
+const paperId = params.get('id');   /* Firestore doc ID preferred */
+const paperTitle = params.get('title'); /* fallback: title string */
+
+let currentUser = null;
+let userProfile = null;
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    const snap = await getDoc(doc(db,'registrants',user.uid));
+    userProfile = snap.exists() ? snap.data() : null;
+  }
+  loadPaper();
+});
+
+async function loadPaper() {
+  let paperData = null;
+
+  /* Try Firestore first */
+  if (paperId) {
+    const snap = await getDoc(doc(db,'papers',paperId));
+    if (snap.exists()) paperData = { id:snap.id, ...snap.data() };
+  }
+
+  /* Fallback: search PAPERS static array by title */
+  if (!paperData && paperTitle) {
+    const decoded = decodeURIComponent(paperTitle);
+    // First try finding it in Firestore by title
+    try {
+      const { collection, getDocs, query, where } = await import(
+        'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'
+      );
+      const q = query(collection(db, 'papers'), where('title', '==', decoded));
+      const snap = await getDocs(q);
+      if (!snap.empty) paperData = { id: snap.docs[0].id, ...snap.docs[0].data() };
+    } catch(e) {}
+    // If still not found in Firestore, use static data as metadata-only
+    if (!paperData) {
+      const staticPaper = PAPERS.find(p => p.title === decoded);
+      if (staticPaper) paperData = {
+        ...staticPaper,
+        type: 'pdf',
+        access: staticPaper.open ? 'open' : 'gated',
+        _staticOnly: true  // flag: metadata exists but content not yet uploaded
+      };
+    }
+  }
+
+  if (!paperData) {
+    document.getElementById('paper-loading').innerHTML = '<p>Paper not found.</p>';
+    return;
+  }
+
+  /* Match speaker */
+  const speaker = SPEAKERS.find(s => paperData.author && s.name.includes(paperData.author.split(',')[0].split(' ').pop()));
+  const colors  = speaker ? speaker.color : ['#1E4D2B','#7B3F1A'];
+  const initials = (paperData.author||'?').split(' ').filter(w=>/^[A-Z]/.test(w)).slice(-2).map(w=>w[0]).join('');
+
+  /* Fill header */
+  document.getElementById('p-session').textContent = paperData.session||'';
+  document.getElementById('p-title').textContent   = paperData.title||'';
+  document.getElementById('p-author').textContent  = paperData.author||'';
+  document.getElementById('p-role').textContent    = speaker ? speaker.role.replace(/ — Palaver \d+/,'') : '';
+  const av = document.getElementById('p-avatar');
+  av.textContent = initials;
+  av.style.background = `linear-gradient(135deg,${colors[0]},${colors[1]})`;
+
+  /* Badges */
+  const typeLabel = { pdf:'PDF', video:'Video', text:'Long-form' }[paperData.type||'pdf']||'PDF';
+  document.getElementById('p-badges').innerHTML = `
+    <span class="paper-badge pb-session">${paperData.session||''}</span>
+    <span class="paper-badge pb-type">${typeLabel}</span>
+    <span class="paper-badge pb-access">${paperData.access==='open'?'🌐 Open access':'🔒 Registered only'}</span>
+  `;
+
+  /* Update page title */
+  document.title = `${paperData.title} — PACTPAN 2026`;
+
+  /* Check access */
+  const isOpen       = paperData.access === 'open';
+  const isRegistered = !!userProfile;
+  const canAccess    = isOpen || isRegistered;
+
+  if (!canAccess) {
+    document.getElementById('paper-gate').style.display = 'block';
+  } else {
+    renderContent(paperData);
+    /* Mark as read */
+    if (currentUser && userProfile) {
+      await updateDoc(doc(db,'registrants',currentUser.uid), {
+        papersRead: arrayUnion(paperData.id || paperData.title)
+      }).catch(()=>{});
+    }
+  }
+
+  /* Related papers */
+  const related = PAPERS.filter(p=>p.title!==paperData.title).slice(0,5);
+  document.getElementById('related-papers').innerHTML = related.map(p=>`
+    <a class="related-paper" href="paper.html?title=${encodeURIComponent(p.title)}">
+      <span class="rp-icon">${p.open?'📄':'🔒'}</span>
+      <div><div class="rp-title">${p.title}</div><div class="rp-author">${p.author}</div></div>
+    </a>
+  `).join('');
+
+  document.getElementById('paper-loading').style.display = 'none';
+  document.getElementById('paper-wrap').style.display    = 'block';
+}
+
+function renderContent(p) {
+  const wrap = document.getElementById('paper-body-wrap');
+  const type = p.type || 'pdf';
+
+  if (type === 'pdf' && p.pdfUrl) {
+    wrap.innerHTML = `
+      <div class="pdf-download">
+        <span>📄</span>
+        <div>
+          <a href="${p.pdfUrl}" target="_blank" download>Download PDF</a>
+          <div class="pdf-download" style="margin:0;padding:0;background:none;border:none"><span style="font-size:.78rem;color:var(--text-muted)">Opens in a new tab</span></div>
+        </div>
+      </div>
+      <iframe class="pdf-viewer" src="${p.pdfUrl}#toolbar=1" title="${p.title}"></iframe>
+    `;
+  } else if (type === 'video' && p.videoUrl) {
+    /* Convert YouTube watch URL to embed */
+    let embedUrl = p.videoUrl;
+    const ytMatch = p.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    if (ytMatch) embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}`;
+    const vimeoMatch = p.videoUrl.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) embedUrl = `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+
+    wrap.innerHTML = `
+      <div class="video-wrap">
+        ${ytMatch||vimeoMatch
+          ? `<iframe src="${embedUrl}" allowfullscreen title="${p.title}"></iframe>`
+          : `<video src="${p.videoUrl}" controls></video>`}
+      </div>
+      ${p.videoDesc ? `<div class="video-description"><strong>About this presentation:</strong><br/>${p.videoDesc}</div>` : ''}
+    `;
+  } else if (type === 'text' && p.body) {
+    wrap.innerHTML = `<div class="paper-body">${p.body}</div>`;
+  } else {
+    // Content not yet uploaded — show a friendly in-page message, don't redirect
+    wrap.innerHTML = `
+      <div style="text-align:center;padding:3rem 2rem">
+        <div style="font-size:3rem;margin-bottom:1rem">📭</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--forest-dark);margin-bottom:.8rem">
+          Content Coming Soon
+        </h3>
+        <p style="font-size:.9rem;color:var(--text-muted);line-height:1.8;max-width:400px;margin:0 auto 1.5rem">
+          This paper has been registered in the programme but the full content has not been uploaded yet.
+          Please check back after the session date.
+        </p>
+        <a href="papers.html" style="font-size:.85rem;font-weight:600;color:var(--forest)">
+          ← Back to all papers
+        </a>
+      </div>
+    `;
+  }
+}
+</script>
+</body>
+
+</html>

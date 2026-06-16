@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PACTPAN Palaver Series 2026 — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── HERO SLIDER ── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 620px;
+      overflow: hidden;
+      padding-top: 68px;
+    }
+
+    .slider-wrap {
+      display: flex;
+      width: 300%;
+      /* 3 slides */
+      height: 100%;
+      transition: transform 0.75s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slide {
+      width: calc(100% / 3);
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.06);
+      transition: transform 6s ease;
+    }
+
+    .slide.active .slide-bg {
+      transform: scale(1);
+    }
+
+    .slide-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg,
+          rgba(18, 43, 24, 0.90) 0%,
+          rgba(30, 77, 43, 0.72) 45%,
+          rgba(123, 63, 26, 0.55) 100%);
+    }
+
+    .slide:nth-child(2) .slide-overlay {
+      background: linear-gradient(160deg,
+          rgba(123, 63, 26, 0.88) 0%,
+          rgba(30, 77, 43, 0.65) 55%,
+          rgba(18, 43, 24, 0.6) 100%);
+    }
+
+    .slide:nth-child(3) .slide-overlay {
+      background: linear-gradient(160deg,
+          rgba(18, 43, 24, 0.92) 0%,
+          rgba(46, 58, 89, 0.7) 55%,
+          rgba(184, 134, 11, 0.3) 100%);
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .slide-badge {
+      display: inline-block;
+      background: rgba(184, 134, 11, 0.2);
+      border: 1px solid rgba(184, 134, 11, 0.5);
+      color: var(--gold-bright);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      margin-bottom: 1.4rem;
+    }
+
+    .slide-content h1 {
+      font-size: clamp(1.9rem, 5vw, 3.8rem);
+      color: #fff;
+      max-width: 820px;
+      margin-bottom: 1.2rem;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+      line-height: 1.15;
+    }
+
+    .slide-content p {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+    }
+
+    .slide-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Slide controls */
+    .slider-prev,
+    .slider-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .25s;
+      backdrop-filter: blur(6px);
+    }
+
+    .slider-prev {
+      left: 1.5rem;
+    }
+
+    .slider-next {
+      right: 1.5rem;
+    }
+
+    .slider-prev:hover,
+    .slider-next:hover {
+      background: rgba(184, 134, 11, 0.35);
+      border-color: var(--gold-bright);
+    }
+
+    .slider-dots {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all .3s;
+    }
+
+    .dot.active {
+      background: var(--gold-bright);
+      width: 28px;
+      border-radius: 4px;
+    }
+
+    /* Progress bar */
+    .slider-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--gold);
+      width: 0%;
+      transition: width linear;
+      z-index: 10;
+    }
+
+    /* ── STATS STRIP ── */
+    #stats {
+      background: var(--forest-dark);
+      padding: 2.5rem 1.5rem;
+      border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+    }
+
+    .stats-row {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .stat-item {
+      padding: 0 1rem;
+    }
+
+    .stat-num {
+      font-family: 'Lora', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--gold-bright);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media(max-width:600px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem
+      }
+
+      .slider-prev,
+      .slider-next {
+        display: none
+      }
+    }
+
+    /* ── INTRO ── */
+    #intro {
+      background: var(--white);
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .intro-img-wrap {
+      position: relative;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--forest);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .intro-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .intro-img-badge {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      background: rgba(18, 43, 24, 0.92);
+      border: 1px solid rgba(184, 134, 11, 0.4);
+      border-radius: var(--r);
+      padding: 1rem 1.2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .intro-img-badge p {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--gold-pale);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .intro-img-badge cite {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-style: normal;
+      display: block;
+      margin-top: .3rem;
+    }
+
+    .intro-text h2 {
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      color: var(--forest-dark);
+      margin: 0.5rem 0 1.2rem;
+    }
+
+    .intro-text p {
+      color: var(--text-mid);
+      line-height: 1.9;
+      margin-bottom: 1rem;
+    }
+
+    .intro-text .btn {
+      margin-top: 0.8rem;
+    }
+
+    @media(max-width:800px) {
+      .intro-grid {
+        grid-template-columns: 1fr
+      }
+
+      .intro-img-wrap {
+        aspect-ratio: 3/2
+      }
+    }
+
+    /* ── SESSIONS PREVIEW ── */
+    #sessions-preview {
+      background: var(--cream);
+    }
+
+    .sessions-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .session-preview-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .session-preview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--forest), var(--gold));
+    }
+
+    .session-preview-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-5px);
+    }
+
+    .spc-date {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--earth);
+      margin-bottom: .4rem;
+    }
+
+    .spc-num {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: .6rem;
+    }
+
+    .spc-title {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      color: var(--forest-dark);
+      line-height: 1.4;
+      margin-bottom: .8rem;
+    }
+
+    .spc-bible {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      border-left: 2px solid var(--gold);
+      padding-left: .8rem;
+      margin-bottom: 1rem;
+    }
+
+    .spc-link {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--forest);
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    .spc-link:hover {
+      color: var(--gold);
+    }
+
+    /* ── QUOTE ── */
+    #quote-strip {
+      background: var(--earth);
+      padding: 5rem 1.5rem;
+      text-align: center;
+    }
+
+    #quote-strip blockquote {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      color: #fff;
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      line-height: 1.55;
+    }
+
+    #quote-strip cite {
+      font-size: .82rem;
+      color: rgba(255, 255, 255, .6);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-style: normal;
+    }
+
+    /* ── SPEAKERS STRIP ── */
+    #speakers-strip {
+      background: var(--white);
+    }
+
+    .speakers-strip-row {
+      display: flex;
+      overflow-x: auto;
+      gap: 1.5rem;
+      padding-bottom: 1rem;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .speakers-strip-row::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .speakers-strip-row::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 2px;
+    }
+
+    .speaker-mini {
+      flex: 0 0 180px;
+      scroll-snap-align: start;
+      background: var(--cream);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all .25s;
+      cursor: pointer;
+    }
+
+    .speaker-mini:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .speaker-mini-avatar {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lora', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .45);
+    }
+
+    .speaker-mini-info {
+      padding: 1rem;
+    }
+
+    .speaker-mini-name {
+      font-family: 'Lora', serif;
+      font-size: .88rem;
+      color: var(--forest-dark);
+      line-height: 1.3;
+      margin-bottom: .2rem;
+    }
+
+    .speaker-mini-role {
+      font-size: .7rem;
+      color: var(--text-muted);
+    }
+
+    /* ── CERT STRIP ── */
+    #cert-strip {
+      background: var(--forest-dark);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+
+    .cert-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    #cert-strip .eyebrow {
+      color: var(--gold-bright);
+    }
+
+    #cert-strip h2 {
+      color: #fff;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin: .5rem 0 1rem;
+    }
+
+    #cert-strip p {
+      color: rgba(255, 255, 255, .7);
+      font-size: .95rem;
+      line-height: 1.85;
+      margin-bottom: 2rem;
+    }
+
+    .cert-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .cert-logo-chip {
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(184, 134, 11, .35);
+      border-radius: 30px;
+      padding: .45rem 1.2rem;
+      font-size: .75rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .8);
+      letter-spacing: .06em;
+    }
+
+    /* ── PARTNERS STRIP ── */
+    #partners-strip {
+      background: var(--cream);
+      padding: 3.5rem 1.5rem;
+    }
+
+    .partners-label {
+      text-align: center;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .partners-label::before,
+    .partners-label::after {
+      content: '';
+      flex: 1;
+      max-width: 120px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .partners-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .partner-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .7rem;
+      text-decoration: none;
+      transition: transform .2s;
+    }
+
+    .partner-tile:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Logo box — same size whether showing image or text */
+    .partner-logo-box {
+      width: 110px;
+      height: 110px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: .8rem;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+
+    .partner-tile:hover .partner-logo-box {
+      box-shadow: var(--shadow-md);
+    }
+
+    /* The actual <img> */
+    .partner-logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Text fallback — shown when logo is null or image errors */
+    .partner-abbr-text {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--forest-dark);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .partner-name-label {
+      font-size: .68rem;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 100px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="js/data.js"></script>
+  <script type="module" src="js/nav-auth.js"></script>
+
+  <!-- Injected by data.js -->
+  <div id="shell-target"></div>
+
+  <!-- ══════════ HERO SLIDER ══════════ -->
+  <section id="hero">
+    <div class="slider-wrap" id="slider-wrap">
+      <!-- SLIDE 1 -->
+      <div class="slide active">
+        <div class="slide-bg"
+          style="background-image:url('https://images.unsplash.com/photo-1616587894289-86480e533129?w=1600&q=80');background-color:#1E4D2B">
+        </div>
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <span class="slide-badge">PACTPAN Palaver Series &nbsp;·&nbsp; July – August 2026</span>
+          <h1>Priests as Prophetic Servant Leaders in a Vital Church in Nigeria</h1>
+          <p>Caring for Self, One Another, and God's People</p>
+          <div class="slide-btns">
+            <a href="sessions.html" class="btn btn-gold">View Programme</a>
+            <a href="register.html" class="btn btn-white">Register to Attend</a>
+          </div>
+        </div>
+      </div>
+      <!-- SLIDE 2 -->
+      <div class="slide">
+        <div class="slide-bg"
+          style="background-image:url('https://images.unsplash.com/photo-1508615070457-7baeba4003ab?w=1600&q=80');background-color:#122B18">
+        </div>
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <span class="slide-badge">Six Weeks &nbsp;·&nbsp; National Online Formation</span>
+          <h1>Renewal of Priestly Ministry in Nigeria</h1>
+          <p>A national palaver among priests, bishops, and invited lay collaborators — July to August 2026</p>
+          <div class="slide-btns">
+            <a href="about.html" class="btn btn-gold">About the Palaver</a>
+            <a href="papers.html" class="btn btn-white">Read Papers</a>
+          </div>
+        </div>
+      </div>
+      <!-- SLIDE 3 -->
+      <div class="slide">
+        <div class="slide-bg"
+          style="background-image:url('https://images.unsplash.com/photo-1470137237906-d8a4f71e1966?w=1600&q=80');background-color:#2E3A59">
+        </div>
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <span class="slide-badge">Certificate of Completion &nbsp;·&nbsp; CSN · CATHAN · PACTPAN · Veritas</span>
+          <h1>Six Sessions. One Shared Vision for a Vital Church.</h1>
+          <p>"You did not choose me, but I chose you" — John 15:16</p>
+          <div class="slide-btns">
+            <a href="register.html" class="btn btn-gold">Register Now</a>
+            <a href="speakers.html" class="btn btn-white">Meet the Speakers</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="slider-prev" id="slider-prev" aria-label="Previous">&#8592;</button>
+    <button class="slider-next" id="slider-next" aria-label="Next">&#8594;</button>
+    <div class="slider-dots" id="slider-dots">
+      <button class="dot active"></button>
+      <button class="dot"></button>
+      <button class="dot"></button>
+    </div>
+    <div class="slider-progress" id="slider-progress"></div>
+  </section>
+
+  <!-- ══════════ STATS ══════════ -->
+  <section id="stats">
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Weekly Sessions</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">20+</div>
+        <div class="stat-label">Resource Persons</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2.5<span style="font-size:1.2rem">hrs</span></div>
+        <div class="stat-label">Per Session</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Certifying Bodies</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ INTRO ══════════ -->
+  <section id="intro" class="section">
+    <div class="section-inner">
+      <div class="intro-grid">
+        <div class="intro-img-wrap">
+          <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=900&q=80" alt="Priests in formation"
+            loading="lazy" onerror="this.style.display='none'" />
+          <div class="intro-img-badge">
+            <p>"The priest is called to live a life of total self-gift, reflecting the charity of the Good Shepherd."
+            </p>
+            <cite>— Pastores Dabo Vobis, 23</cite>
+          </div>
+        </div>
+        <div class="intro-text">
+          <div class="divider"></div>
+          <span class="eyebrow">About the Palaver</span>
+          <h2>A Formation Initiative Born from Pastoral Urgency</h2>
+          <p>Pope Leo recently invited the Church to pray for priests in crisis, reminding us that "the priest is not
+            immune from the struggles of the human condition, but must learn to carry them in communion with Christ and
+            with the People of God."</p>
+          <p>Many priests carry hidden burdens — fatigue, loneliness, poor health, strained relationships. This national
+            online palaver creates a safe space to acknowledge those burdens and build toward genuine renewal.</p>
+          <p>Across six weeks, bishops, theologians, practitioners, and lay collaborators gather to address the whole
+            person of the priest: his spiritual life, his health, his relationships, his leadership, and his future.</p>
+          <a href="about.html" class="btn btn-forest">Read the Full Story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ SESSIONS PREVIEW ══════════ -->
+  <section id="sessions-preview" class="section">
+    <div class="section-inner">
+      <div class="section-hd">
+        <div class="divider" style="margin:0 auto 1rem"></div>
+        <span class="eyebrow">Programme</span>
+        <h2>Six Weeks of Structured Formation</h2>
+        <p>Each session runs for two and a half hours and features an allocutio by a bishop, expert presentations, and
+          facilitated group discussion.</p>
+      </div>
+      <div class="sessions-cards" id="sessions-preview-cards"></div>
+      <div style="text-align:center">
+        <a href="sessions.html" class="btn btn-forest">View Full Programme &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ QUOTE ══════════ -->
+  <section id="quote-strip">
+    <blockquote>"What is done without taking the time to do it well, does not stand the test of time."</blockquote>
+    <cite>— St. Vincent de Paul</cite>
+  </section>
+
+  <!-- ══════════ SPEAKERS STRIP ══════════ -->
+  <section id="speakers-strip" class="section">
+    <div class="section-inner">
+      <div class="section-hd">
+        <div class="divider" style="margin:0 auto 1rem"></div>
+        <span class="eyebrow">Faculty</span>
+        <h2>Distinguished Speakers &amp; Resource Persons</h2>
+        <p>Bishops, theologians, practitioners, and interdisciplinary scholars speaking from wisdom and experience.</p>
+      </div>
+      <div class="speakers-strip-row" id="speakers-strip-row"></div>
+      <div style="text-align:center;margin-top:2.5rem">
+        <a href="speakers.html" class="btn btn-forest">View All Speakers &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ CERT STRIP ══════════ -->
+  <section id="cert-strip">
+    <div class="cert-inner">
+      <div class="divider" style="margin:0 auto 1rem;background:linear-gradient(90deg,var(--gold),var(--gold-bright))">
+      </div>
+      <span class="eyebrow">Certificate of Completion</span>
+      <h2>Jointly Presented by Four Institutions</h2>
+      <p>Participants who attend all six sessions and complete the self-care audit and Vital Church Pastoral Situation
+        Analysis will receive a joint Certificate of Honor.</p>
+      <div class="cert-logos">
+        <span class="cert-logo-chip">PACTPAN</span>
+        <span class="cert-logo-chip">CSN</span>
+        <span class="cert-logo-chip">CATHAN</span>
+        <span class="cert-logo-chip">Veritas University Abuja</span>
+        <span class="cert-logo-chip">NCDPA</span>
+      </div>
+      <a href="register.html" class="btn btn-gold">Register to Qualify &#8594;</a>
+    </div>
+  </section>
+
+  <!-- ══════════ PARTNERS STRIP ══════════ -->
+  <section id="partners-strip">
+    <div class="section-inner">
+      <div class="partners-label">In Partnership With</div>
+      <div class="partners-row" id="partners-row"></div>
+    </div>
+  </section>
+
+  <script>
+    injectShell();
+
+    /* ── BUILD PARTNERS STRIP ── */
+    const pr = document.getElementById('partners-row');
+    PARTNERS.forEach(p => {
+      const tile = document.createElement('a');
+      tile.href = 'partners.html';
+      tile.className = 'partner-tile';
+      tile.title = p.full;
+
+      /*
+        Logo box:
+        - If p.logo is set, render an <img>
+        - onerror swaps the img for the abbr text (image exists but is broken)
+        - If p.logo is null, skip the img entirely and show abbr text directly
+      */
+      const logoInner = p.logo ?
+        `<img src="${p.logo}" alt="${p.abbr} logo" loading="lazy"
+            onerror="
+              this.style.display='none';
+              this.nextElementSibling.style.display='flex';
+            "/>
+       <div class="partner-abbr-text" style="display:none">${p.abbr}</div>` :
+        `<div class="partner-abbr-text">${p.abbr}</div>`;
+
+      tile.innerHTML = `
+    <div class="partner-logo-box">${logoInner}</div>
+    <div class="partner-name-label">${p.full}</div>
+  `;
+      pr.appendChild(tile);
+    });
+
+    /* ── BUILD SESSIONS CARDS ── */
+    const sc = document.getElementById('sessions-preview-cards');
+    SESSIONS.forEach(s => {
+      const el = document.createElement('a');
+      el.href = `sessions.html#session-${s.id}`;
+      el.className = 'session-preview-card';
+      el.innerHTML = `
+    <div class="spc-date">${s.date}</div>
+    <div class="spc-num">${s.label}</div>
+    <div class="spc-title">${s.title}</div>
+    <div class="spc-bible">${s.bible}</div>
+    <span class="spc-link">View session details &#8594;</span>
+  `;
+      sc.appendChild(el);
+    });
+
+    /* ── BUILD SPEAKERS STRIP ── */
+    const sr = document.getElementById('speakers-strip-row');
+    SPEAKERS.forEach(sp => {
+      const el = document.createElement('div');
+      el.className = 'speaker-mini';
+      el.onclick = () => location.href = 'speakers.html';
+
+      const photoHTML = sp.photo ?
+        `<img src="${sp.photo}" alt="${sp.name}"
+            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;z-index:2"
+            loading="lazy"
+            onerror="this.style.display='none'"/>` :
+        '';
+
+      el.innerHTML = `
+    <div class="speaker-mini-avatar"
+         style="position:relative;background:linear-gradient(135deg,${sp.color[0]},${sp.color[1]})">
+      <span style="position:relative;z-index:1">${sp.initials}</span>
+      ${photoHTML}
+    </div>
+    <div class="speaker-mini-info">
+      <div class="speaker-mini-name">${sp.name}</div>
+      <div class="speaker-mini-role">${sp.session}</div>
+    </div>
+  `;
+      sr.appendChild(el);
+    });
+
+    /* ══════════════════════════════════
+       SLIDER — pure JS, no frameworks
+       ══════════════════════════════════ */
+    const wrap = document.getElementById('slider-wrap');
+    const dots = document.querySelectorAll('.dot');
+    const progress = document.getElementById('slider-progress');
+    const slides = document.querySelectorAll('.slide');
+    const TOTAL = slides.length;
+    const DURATION = 5000; // ms per slide
+
+    let current = 0;
+    let timer = null;
+    let progTimer = null;
+
+    function goTo(n) {
+      slides[current].classList.remove('active');
+      current = (n + TOTAL) % TOTAL;
+      slides[current].classList.add('active');
+
+      /* Move the strip */
+      wrap.style.transform = `translateX(-${current * (100 / TOTAL)}%)`;
+
+      /* Dots */
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+
+      /* Progress bar reset */
+      progress.style.transition = 'none';
+      progress.style.width = '0%';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          progress.style.transition = `width ${DURATION}ms linear`;
+          progress.style.width = '100%';
+        });
+      });
+    }
+
+    function startAuto() {
+      clearInterval(timer);
+      timer = setInterval(() => goTo(current + 1), DURATION);
+    }
+
+    /* Kick off */
+    goTo(0);
+    startAuto();
+
+    document.getElementById('slider-prev').onclick = () => {
+      goTo(current - 1);
+      startAuto();
+    };
+    document.getElementById('slider-next').onclick = () => {
+      goTo(current + 1);
+      startAuto();
+    };
+    dots.forEach((d, i) => d.addEventListener('click', () => {
+      goTo(i);
+      startAuto();
+    }));
+
+    /* Pause on hover */
+    wrap.addEventListener('mouseenter', () => clearInterval(timer));
+    wrap.addEventListener('mouseleave', startAuto);
+
+    /* Touch swipe */
+    let touchX = 0;
+    wrap.addEventListener('touchstart', e => {
+      touchX = e.touches[0].clientX;
+    }, {
+      passive: true
+    });
+    wrap.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) {
+        goTo(dx < 0 ? current + 1 : current - 1);
+        startAuto();
+      }
+    }, {
+      passive: true
+    });
+  </script>
+</body>
+
+</html>

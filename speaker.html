@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Speaker - PACTPAN Palaver Series 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .sp-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* ── PROFILE CARD (left) ── */
+        .sp-card {
+            background: var(--white);
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: sticky;
+            top: 88px;
+        }
+
+        .sp-photo-wrap {
+            position: relative;
+            height: 340px;
+            background: var(--forest);
+        }
+
+        .sp-photo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+        }
+
+        .sp-photo-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Lora', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, .35);
+        }
+
+        .sp-photo-band {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: .6rem 1rem;
+            background: rgba(0, 0, 0, .5);
+            backdrop-filter: blur(4px);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--gold-bright);
+        }
+
+        .sp-card-body {
+            padding: 1.8rem;
+        }
+
+        .sp-name {
+            font-family: 'Lora', serif;
+            font-size: 1.35rem;
+            color: var(--forest-dark);
+            margin-bottom: .3rem;
+            line-height: 1.25;
+        }
+
+        .sp-role {
+            font-size: .82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+        }
+
+        .sp-session-tag {
+            display: inline-block;
+            font-size: .68rem;
+            font-weight: 700;
+            background: rgba(30, 77, 43, .1);
+            color: var(--forest);
+            padding: .2rem .7rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Socials */
+        .sp-socials {
+            display: grid;
+            gap: .6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sp-social {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            font-size: .82rem;
+            color: var(--text-mid);
+            padding: .55rem .8rem;
+            border-radius: var(--r);
+            background: var(--cream);
+            text-decoration: none;
+            transition: background .2s;
+        }
+
+        .sp-social:hover {
+            background: var(--cream-dark);
+        }
+
+        .sp-social-icon {
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sp-social-label {
+            color: var(--text-muted);
+            font-size: .72rem;
+        }
+
+        .sp-social-value {
+            color: var(--forest-dark);
+            font-weight: 500;
+        }
+
+        .sp-back {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--forest);
+            margin-bottom: 1.2rem;
+            text-decoration: none;
+        }
+
+        .sp-back:hover {
+            color: var(--gold);
+        }
+
+        /* ── MAIN (right) ── */
+        .sp-bio-card {
+            background: var(--white);
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sp-bio-card h2 {
+            font-size: 1.5rem;
+            color: var(--forest-dark);
+            margin-bottom: 1rem;
+        }
+
+        .sp-bio-text {
+            font-size: 1rem;
+            color: var(--text-mid);
+            line-height: 1.9;
+        }
+
+        .sp-bio-text p {
+            margin-bottom: 1rem;
+        }
+
+        /* Paper */
+        .sp-paper-card {
+            background: var(--white);
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sp-paper-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+        }
+
+        .sp-paper-item {
+            display: flex;
+            align-items: start;
+            gap: 1.2rem;
+            padding: 1.2rem;
+            background: var(--cream);
+            border-radius: var(--r);
+        }
+
+        .sp-paper-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .sp-paper-title {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            color: var(--forest-dark);
+            margin-bottom: .5rem;
+            line-height: 1.4;
+        }
+
+        .sp-paper-actions {
+            display: flex;
+            gap: .8rem;
+            flex-wrap: wrap;
+        }
+
+        .sp-paper-btn {
+            display: inline-block;
+            padding: .5rem 1.2rem;
+            border-radius: var(--r);
+            font-size: .82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s;
+        }
+
+        .sp-paper-btn-primary {
+            background: var(--forest);
+            color: #fff;
+        }
+
+        .sp-paper-btn-primary:hover {
+            background: var(--forest-mid);
+        }
+
+        .sp-paper-btn-locked {
+            background: var(--cream-dark);
+            color: var(--text-muted);
+            cursor: default;
+        }
+
+        /* Session context */
+        .sp-session-card {
+            background: var(--forest-dark);
+            border-radius: var(--r-lg);
+            padding: 2rem;
+        }
+
+        .sp-session-card h3 {
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--gold-bright);
+            margin-bottom: .8rem;
+        }
+
+        .sp-session-title {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: .5rem;
+            line-height: 1.35;
+        }
+
+        .sp-session-date {
+            font-size: .82rem;
+            color: rgba(255, 255, 255, .6);
+            margin-bottom: .8rem;
+        }
+
+        .sp-session-bible {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: .95rem;
+            color: var(--gold-pale);
+            border-left: 2px solid var(--gold);
+            padding-left: 1rem;
+        }
+
+        /* Not found state */
+        .not-found {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .not-found h2 {
+            font-size: 1.4rem;
+            color: var(--forest-dark);
+            margin-bottom: .8rem;
+        }
+
+        @media(max-width:860px) {
+            .sp-layout {
+                grid-template-columns: 1fr
+            }
+
+            .sp-card {
+                position: static
+            }
+        }
+
+        /* ── Bio rich content rendering ── */
+        .sp-bio-rendered h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: var(--forest-dark);
+            margin: 1.5rem 0 .6rem;
+        }
+
+        .sp-bio-rendered h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            color: var(--forest-dark);
+            margin: 1.2rem 0 .5rem;
+        }
+
+        .sp-bio-rendered p {
+            margin-bottom: 1rem;
+        }
+
+        .sp-bio-rendered ul,
+        .sp-bio-rendered ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .sp-bio-rendered li {
+            margin-bottom: .3rem;
+        }
+
+        .sp-bio-rendered blockquote {
+            border-left: 3px solid var(--gold);
+            padding-left: 1rem;
+            margin: 1.2rem 0;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--forest);
+        }
+
+        .sp-bio-rendered strong {
+            color: var(--forest-dark);
+            font-weight: 600;
+        }
+
+        .sp-bio-rendered em {
+            font-style: italic;
+        }
+
+        .sp-bio-rendered a {
+            color: var(--forest);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="padding-top:68px">
+        <section class="section" style="padding-top:2rem">
+            <div class="section-inner">
+                <a href="speakers.html" class="sp-back">&#8592; Back to all speakers</a>
+
+                <div id="sp-loading" style="text-align:center;padding:4rem;color:var(--text-muted)">Loading…</div>
+                <div id="sp-wrap" class="sp-layout" style="display:none"></div>
+                <div id="sp-not-found" class="not-found" style="display:none">
+                    <h2>Speaker not found</h2>
+                    <p style="color:var(--text-muted)"><a href="speakers.html" style="color:var(--forest)">Back to
+                            speakers</a></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script>
+        injectShell();
+    </script>
+    <script type="module" src="js/nav-auth.js"></script>
+
+    <script type="module">
+        import { auth, db } from './js/firebase.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const params = new URLSearchParams(location.search);
+const spId   = parseInt(params.get('id'));
+
+let isSignedIn = false;
+let firestoreData = null; /* overrides static data when available */
+
+/* Fetch Firestore speaker data first, then wait for auth */
+async function init() {
+  if (!isNaN(spId) && spId >= 0 && spId < SPEAKERS.length) {
+    const key = SPEAKERS[spId].name.replace(/[^a-zA-Z0-9]/g, '_');
+    try {
+      const snap = await getDoc(doc(db, 'speakers', key));
+      if (snap.exists()) firestoreData = snap.data();
+    } catch(e) { /* Firestore unavailable - use static data */ }
+  }
+}
+
+/* Run init then listen for auth */
+init().then(() => {
+  onAuthStateChanged(auth, user => {
+    isSignedIn = !!user;
+    renderPage();
+  });
+});
+
+function renderPage() {
+  if (isNaN(spId) || spId < 0 || spId >= SPEAKERS.length) {
+    document.getElementById('sp-loading').style.display    = 'none';
+    document.getElementById('sp-not-found').style.display = 'block';
+    return;
+  }
+
+  /* Merge: Firestore data wins over static data for editable fields */
+  const base = SPEAKERS[spId];
+  const sp = {
+    ...base,
+    bio:      firestoreData?.bio      ?? base.bio,
+    email:    firestoreData?.email    ?? base.email,
+    twitter:  firestoreData?.twitter  ?? base.twitter,
+    linkedin: firestoreData?.linkedin ?? base.linkedin,
+    website:  firestoreData?.website  ?? base.website,
+    photo:    firestoreData?.photo    ?? base.photo,
+  };
+
+  /* Update page title */
+  document.title = sp.name + ' - PACTPAN Palaver Series 2026';
+
+  /* Find their session */
+  const session = SESSIONS.find(s => s.label === sp.session);
+
+  /* Paper access */
+  const paperUrl    = 'paper.html?title=' + encodeURIComponent(sp.paper);
+  const paperAction = isSignedIn
+    ? '<a href="' + paperUrl + '" class="sp-paper-btn sp-paper-btn-primary">Read Paper &#8594;</a>'
+    : '<a href="register.html" class="sp-paper-btn sp-paper-btn-locked">&#128274; Register to Read</a>';
+
+  /* Social links */
+  const socials = [];
+  if (sp.email)    socials.push({ icon:'✉️', label:'Email',    value: sp.email,    href:'mailto:'+sp.email });
+  if (sp.twitter)  socials.push({ icon:'𝕏',  label:'Twitter/X', value:'@'+sp.twitter, href:'https://twitter.com/'+sp.twitter });
+  if (sp.linkedin) socials.push({ icon:'in', label:'LinkedIn', value: sp.linkedin,   href:'https://linkedin.com/in/'+sp.linkedin });
+  if (sp.website)  socials.push({ icon:'🌐', label:'Website',  value: sp.website,    href: sp.website });
+
+  const socialsHTML = socials.length
+    ? socials.map(s => `
+        <a class="sp-social" href="${s.href}" target="_blank" rel="noopener">
+          <span class="sp-social-icon">${s.icon}</span>
+          <div>
+            <div class="sp-social-label">${s.label}</div>
+            <div class="sp-social-value">${s.value}</div>
+          </div>
+        </a>`).join('')
+    : '<p style="font-size:.8rem;color:var(--text-muted)">No contact details available yet.</p>';
+
+  /* Photo */
+  const photoHTML = sp.photo
+    ? `<img src="${sp.photo}" alt="${sp.name}" onerror="this.style.display='none';document.getElementById('sp-fallback').style.display='flex'"/>
+       <div id="sp-fallback" class="sp-photo-fallback" style="display:none;background:linear-gradient(135deg,${sp.color[0]},${sp.color[1]})">${sp.initials}</div>`
+    : `<div class="sp-photo-fallback" style="background:linear-gradient(135deg,${sp.color[0]},${sp.color[1]})">${sp.initials}</div>`;
+
+  /* Session block */
+  const sessionHTML = session ? `
+    <div class="sp-session-card">
+      <h3>Speaking at</h3>
+      <div class="sp-session-title">${session.title}</div>
+      <div class="sp-session-date">${session.label} &nbsp;·&nbsp; ${session.date}</div>
+      <div class="sp-session-bible">${session.bible}</div>
+    </div>` : '';
+
+  /* Build layout */
+  const wrap = document.getElementById('sp-wrap');
+  wrap.innerHTML = `
+    <!-- LEFT COLUMN -->
+    <div>
+      <div class="sp-card">
+        <div class="sp-photo-wrap" style="background:linear-gradient(135deg,${sp.color[0]},${sp.color[1]})">
+          ${photoHTML}
+          <div class="sp-photo-band">${sp.session}</div>
+        </div>
+        <div class="sp-card-body">
+          <div class="sp-name">${sp.name}</div>
+          <div class="sp-role">${sp.role.replace(/ - Palaver \d+/,'')}</div>
+          <span class="sp-session-tag">${sp.session}</span>
+          <div class="sp-socials">${socialsHTML}</div>
+          <a href="speakers.html" style="font-size:.78rem;color:var(--text-muted);display:block;text-align:center">&#8592; All Speakers</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <div class="sp-bio-card">
+        <h2>Biography</h2>
+        <div class="sp-bio-text sp-bio-rendered" id="sp-bio-content"></div>
+      </div>
+
+      <div class="sp-paper-card">
+        <h3>Presentation Paper</h3>
+        <div class="sp-paper-item">
+          <div class="sp-paper-icon">&#128196;</div>
+          <div>
+            <div class="sp-paper-title">${sp.paper}</div>
+            <div class="sp-paper-actions" style="margin-top:.8rem">${paperAction}</div>
+          </div>
+        </div>
+      </div>
+
+      ${sessionHTML}
+    </div>
+  `;
+
+  document.getElementById('sp-loading').style.display = 'none';
+  wrap.style.display = 'grid';
+
+  /* Render bio - supports HTML (from rich editor) or plain text */
+  const bioEl = document.getElementById('sp-bio-content');
+  if (bioEl) {
+    const bio = sp.bio || '';
+    /* If it looks like HTML (contains tags), render as innerHTML */
+    if (/<[a-z][\s\S]*>/i.test(bio)) {
+      bioEl.innerHTML = bio;
+    } else {
+      /* Plain text - wrap each paragraph */
+      bioEl.innerHTML = bio.split(/\n+/).filter(Boolean)
+        .map(p => '<p>' + p + '</p>').join('');
+    }
+  }
+}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sessions — PACTPAN Palaver Series 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .timeline {
+      position: relative;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 60px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, var(--gold) 0%, rgba(184, 134, 11, .1) 100%);
+    }
+
+    .t-item {
+      position: relative;
+      padding: 0 0 3rem 108px;
+    }
+
+    .t-badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 58px;
+      text-align: center;
+    }
+
+    .t-badge-month {
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+    }
+
+    .t-badge-day {
+      font-family: 'Lora', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--forest-dark);
+      line-height: 1;
+    }
+
+    .t-dot {
+      position: absolute;
+      left: 53px;
+      top: 8px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid var(--cream);
+      box-shadow: 0 0 0 3px rgba(184, 134, 11, .3);
+    }
+
+    .t-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      transition: all .25s;
+    }
+
+    .t-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .t-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--earth);
+      margin-bottom: .4rem;
+    }
+
+    .t-title {
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      color: var(--forest-dark);
+      margin-bottom: .6rem;
+      line-height: 1.35;
+    }
+
+    .t-focus {
+      font-size: .88rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+
+    .t-bible {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--forest);
+      border-left: 3px solid var(--gold);
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .t-speakers {
+      display: grid;
+      gap: .6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .t-speaker {
+      display: flex;
+      gap: 1rem;
+      align-items: start;
+      padding: .75rem 1rem;
+      background: var(--cream);
+      border-radius: var(--r);
+      font-size: .85rem;
+    }
+
+    .t-speaker-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .t-speaker-avatar-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lora', serif;
+      font-size: .9rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .7);
+    }
+
+    .t-speaker-avatar img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      z-index: 2;
+    }
+
+    .t-speaker-name {
+      font-weight: 600;
+      color: var(--forest-dark);
+      display: block;
+      margin-bottom: .1rem;
+    }
+
+    .t-speaker-role {
+      color: var(--text-muted);
+      font-size: .78rem;
+      line-height: 1.4;
+    }
+
+    .t-mod {
+      font-size: .78rem;
+      color: var(--text-muted);
+      padding-top: .8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .t-mod strong {
+      color: var(--forest);
+    }
+
+    @media(max-width:680px) {
+      .timeline::before {
+        left: 0;
+      }
+
+      .t-item {
+        padding-left: 16px;
+      }
+
+      .t-badge {
+        display: none;
+      }
+
+      .t-dot {
+        left: -7px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="js/data.js"></script>
+  <script type="module" src="js/nav-auth.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero-bg"
+      style="background-image:url('https://images.unsplash.com/photo-1616587894289-86480e533129?w=1200&q=80')"></div>
+    <div class="page-hero-inner">
+      <span class="eyebrow" style="color:var(--gold-bright)">Programme</span>
+      <h1>Six-Week Formation Programme</h1>
+      <p>July 23 – August 27, 2026 · Every Wednesday · 2.5 hours per session</p>
+    </div>
+    <div class="page-hero-leaf"></div>
+  </div>
+
+  <section class="section" style="background:var(--cream)">
+    <div class="section-inner">
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <section style="background:var(--forest-dark);padding:3rem 1.5rem;text-align:center">
+    <p style="color:rgba(255,255,255,.75);font-size:.95rem;margin-bottom:1.5rem">Ready to join the palaver? Register to
+      confirm your place and gain access to all session materials.</p>
+    <a href="register.html" class="btn btn-gold">Register Now &#8594;</a>
+  </section>
+
+  <script>
+    injectShell();
+
+    /* Build a lookup: speaker name → SPEAKERS entry (for photo + color) */
+    const speakerLookup = {};
+    SPEAKERS.forEach(sp => {
+      speakerLookup[sp.name] = sp;
+    });
+
+    function getInitials(name) {
+      return name.replace(/^(Most Rev\.|Rev\.|Fr|Sr\.|Dr|Mrs?\.|Cardinal|Bishop|Prof\.)\s*/i, '')
+        .trim().split(' ').slice(0, 2).map(w => w[0]).join('');
+    }
+
+    /* Build avatar HTML — photo if available, gradient+initials fallback */
+    function speakerAvatar(spName) {
+      const data = speakerLookup[spName];
+      const inits = getInitials(spName);
+      const colors = data ? data.color : ['#1E4D2B', '#7B3F1A'];
+      const photo = data && data.photo ? data.photo : null;
+      return `
+    <div class="t-speaker-avatar">
+      <div class="t-speaker-avatar-bg"
+           style="background:linear-gradient(135deg,${colors[0]},${colors[1]})">${inits}</div>
+      ${photo ? `<img src="${photo}" alt="${spName}" loading="lazy" onerror="this.style.display='none'"/>` : ''}
+    </div>
+  `;
+    }
+
+    const tl = document.getElementById('timeline');
+    SESSIONS.forEach(s => {
+      const div = document.createElement('div');
+      div.className = 't-item';
+      div.id = `session-${s.id}`; /* ← anchor target from home page cards */
+      div.innerHTML = `
+    <div class="t-badge"><span class="t-badge-month">${s.month}</span><span class="t-badge-day">${s.day}</span></div>
+    <div class="t-dot"></div>
+    <div class="t-card">
+      <div class="t-label">${s.label} &nbsp;·&nbsp; ${s.date}</div>
+      <h2 class="t-title">${s.title}</h2>
+      <p class="t-focus">${s.focus}</p>
+      <p class="t-bible">${s.bible}</p>
+      <div class="t-speakers">
+        ${s.speakers.map(sp => `
+          <div class="t-speaker">
+            ${speakerAvatar(sp.name)}
+            <div><span class="t-speaker-name">${sp.name}</span><span class="t-speaker-role">${sp.role}</span></div>
+          </div>`).join('')}
+      </div>
+      <div class="t-mod"><strong>Moderators:</strong> ${s.moderators}</div>
+    </div>
+  `;
+      tl.appendChild(div);
+    });
+  </script>
+</body>
+
+</html>

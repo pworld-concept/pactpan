@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Papers — PACTPAN Palaver Series 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .access-banner {
+      background: var(--forest-dark);
+      border-radius: var(--r-lg);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid rgba(184, 134, 11, .3);
+    }
+
+    .access-banner-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .access-banner-text p {
+      font-size: .88rem;
+      color: rgba(255, 255, 255, .75);
+      line-height: 1.65;
+    }
+
+    .access-banner-text a {
+      color: var(--gold-bright);
+      font-weight: 600;
+    }
+
+    .papers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .paper-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .paper-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--forest), var(--gold));
+    }
+
+    .paper-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .pc-session {
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--earth);
+      margin-bottom: .5rem;
+    }
+
+    .pc-title {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      color: var(--forest-dark);
+      line-height: 1.45;
+      margin-bottom: .5rem;
+      flex: 1;
+    }
+
+    .pc-author {
+      font-size: .8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.3rem;
+    }
+
+    .pc-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pc-badge {
+      font-size: .68rem;
+      padding: .2rem .7rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .badge-open {
+      background: rgba(30, 77, 43, .1);
+      color: var(--forest);
+    }
+
+    .badge-gated {
+      background: rgba(123, 63, 26, .12);
+      color: var(--earth);
+    }
+
+    .pc-btn {
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .45rem 1rem;
+      border-radius: var(--r);
+      border: none;
+      cursor: pointer;
+      font-family: 'Lora', serif;
+      transition: all .2s;
+    }
+
+    .pc-btn-open {
+      background: var(--forest);
+      color: #fff;
+    }
+
+    .pc-btn-open:hover {
+      background: var(--forest-mid);
+    }
+
+    .pc-btn-locked {
+      background: var(--cream-dark);
+      color: var(--text-muted);
+      cursor: default;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="js/data.js"></script>
+  <script type="module" src="js/nav-auth.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero-bg"
+      style="background-image:url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1200&q=80')"></div>
+    <div class="page-hero-inner">
+      <span class="eyebrow" style="color:var(--gold-bright)">Resource Papers</span>
+      <h1>Presentations &amp; Resource Papers</h1>
+      <p>Papers delivered by guest speakers. Register to unlock full access to all presentations.</p>
+    </div>
+    <div class="page-hero-leaf"></div>
+  </div>
+
+  <section class="section" style="background:var(--cream)">
+    <div class="section-inner">
+      <div class="access-banner">
+        <span class="access-banner-icon">&#128274;</span>
+        <div class="access-banner-text">
+          <p><strong style="color:#fff">Full papers are available exclusively to registered participants.</strong><br />
+            <a href="register.html">Register here</a> to unlock access. One paper is available as a free preview below.
+          </p>
+        </div>
+      </div>
+      <div class="papers-grid" id="papers-grid"></div>
+    </div>
+  </section>
+
+  <script>
+    injectShell();
+  </script>
+
+  <script type="module">
+    import { auth, db } from './js/firebase.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* Fetch uploaded titles from Firestore once, then render */
+let uploadedTitles = new Set();
+try {
+  const snap = await getDocs(collection(db, 'papers'));
+  snap.forEach(d => uploadedTitles.add(d.data().title));
+} catch(e) { /* Firestore not configured yet — all treated as not uploaded */ }
+
+function renderPapers(isSignedIn) {
+  const pg = document.getElementById('papers-grid');
+  pg.innerHTML = '';
+  PAPERS.forEach(p => {
+    const isUploaded = uploadedTitles.has(p.title);
+    const card = document.createElement('div');
+    card.className = 'paper-card';
+    if (!isUploaded) card.style.opacity = '0.65';
+
+    let foot = '';
+
+    if (!isUploaded) {
+      /* Not uploaded yet — lock regardless of auth state */
+      foot = '<button class="pc-btn pc-btn-locked" onclick="showToast(\'This paper has not been uploaded yet — please check back soon.\')">'
+           + '&#128197; Coming Soon</button>'
+           + '<span class="pc-badge badge-gated" style="background:rgba(100,116,139,.12);color:#64748b">Not yet available</span>';
+    } else if (p.open) {
+      /* Open access + uploaded */
+      foot = '<a href="paper.html?title=' + encodeURIComponent(p.title) + '" class="pc-btn pc-btn-open">Read Paper &rarr;</a>'
+           + '<span class="pc-badge badge-open">Open access</span>';
+    } else if (isSignedIn) {
+      /* Gated + uploaded + signed in */
+      foot = '<a href="paper.html?title=' + encodeURIComponent(p.title) + '" class="pc-btn pc-btn-open">Read Paper &rarr;</a>'
+           + '<span class="pc-badge badge-gated">Members only</span>';
+    } else {
+      /* Gated + uploaded + not signed in */
+      foot = '<button class="pc-btn pc-btn-locked" onclick="showToast(\'Please register to access this paper.\')">'
+           + '&#128274; Register to Read</button>'
+           + '<span class="pc-badge badge-gated">Members only</span>';
+    }
+
+    card.innerHTML = '<div class="pc-session">' + p.session + '</div>'
+      + '<div class="pc-title">' + p.title + '</div>'
+      + '<div class="pc-author">' + p.author + '</div>'
+      + '<div class="pc-foot">' + foot + '</div>';
+    pg.appendChild(card);
+  });
+
+  /* Update banner for signed-in users */
+  const banner = document.querySelector('.access-banner-text p');
+  if (banner && isSignedIn) {
+    banner.innerHTML = '<strong style="color:#fff">Welcome back.</strong> You have full access to all uploaded papers below as a registered participant.';
+  }
+}
+
+/* Render guest view immediately, then re-render once auth resolves */
+renderPapers(false);
+onAuthStateChanged(auth, user => renderPapers(!!user));
+</script>
+</body>
+
+</html>

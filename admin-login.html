@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin Login — PACTPAN Palaver Series 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: #0f1f14;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* Background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(30, 77, 43, 0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(184, 134, 11, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            backdrop-filter: blur(12px);
+            position: relative;
+        }
+
+        /* Brand */
+        .brand {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1E4D2B, #B8860B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 auto 1rem;
+            border: 2px solid rgba(184, 134, 11, 0.4);
+        }
+
+        .brand-title {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: .25rem;
+        }
+
+        .brand-sub {
+            font-size: .72rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            margin-top: .8rem;
+            background: rgba(184, 134, 11, 0.15);
+            border: 1px solid rgba(184, 134, 11, 0.35);
+            color: #D4A017;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            padding: .3rem .9rem;
+            border-radius: 20px;
+        }
+
+        /* Form */
+        .fg {
+            margin-bottom: 1.2rem;
+        }
+
+        .fg label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: .4rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        .fg input {
+            width: 100%;
+            padding: .8rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Lora', serif;
+            font-size: .9rem;
+            outline: none;
+            transition: border-color .2s, background .2s;
+        }
+
+        .fg input:focus {
+            border-color: rgba(184, 134, 11, 0.6);
+            background: rgba(255, 255, 255, 0.09);
+        }
+
+        .fg input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .err-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: .75rem 1rem;
+            font-size: .82rem;
+            color: #fca5a5;
+            margin-bottom: 1.2rem;
+            display: none;
+        }
+
+        .err-box.show {
+            display: block;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: .9rem;
+            background: linear-gradient(135deg, #1E4D2B, #2E6B3E);
+            border: 1px solid rgba(30, 77, 43, 0.8);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Lora', serif;
+            font-size: .92rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: .04em;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #2E6B3E, #1E4D2B);
+            box-shadow: 0 4px 20px rgba(30, 77, 43, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .login-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+        }
+
+        .login-footer p {
+            font-size: .76rem;
+            color: rgba(255, 255, 255, 0.3);
+            line-height: 1.6;
+        }
+
+        .login-footer a {
+            color: rgba(184, 134, 11, 0.8);
+        }
+
+        /* Redirect message */
+        .redirect-msg {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: .9rem;
+            display: none;
+        }
+
+        .redirect-msg .check {
+            font-size: 2.5rem;
+            margin-bottom: .8rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+        <div class="brand">
+            <div class="brand-logo">P</div>
+            <div class="brand-title">PACTPAN Admin</div>
+            <div class="brand-sub">Palaver Series 2026</div>
+            <span class="admin-badge">&#9650; Restricted Access</span>
+        </div>
+
+        <div class="err-box" id="err-box"></div>
+
+        <!-- LOGIN FORM -->
+        <div id="form-wrap">
+            <div class="fg">
+                <label>Admin Email</label>
+                <input id="email" type="email" placeholder="admin@example.com" autocomplete="username" />
+            </div>
+            <div class="fg">
+                <label>Password</label>
+                <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+            </div>
+            <button class="login-btn" id="login-btn">
+                <span id="btn-label">Sign In to Admin Panel</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </div>
+
+        <!-- REDIRECT MESSAGE (shown after successful login) -->
+        <div class="redirect-msg" id="redirect-msg">
+            <div class="check">&#9989;</div>
+            <p>Verified. Redirecting to admin panel…</p>
+        </div>
+
+        <div class="login-footer">
+            <p>
+                This page is for authorised administrators only.<br />
+                <a href="index.html">&#8592; Return to main site</a>
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './js/firebase.js';
+import { signInWithEmailAndPassword, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { doc, getDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* If already signed in as admin, go straight to admin panel */
+onAuthStateChanged(auth, async user => {
+  if (!user) return;
+  const snap = await getDoc(doc(db, 'registrants', user.uid));
+  const role = snap.exists() ? snap.data().role : null;
+  if (role === 'admin') {
+    showRedirect();
+    setTimeout(() => { window.location.href = 'admin.html'; }, 800);
+  }
+  /* Not admin — stay on page, let them try signing in as admin */
+});
+
+/* Error messages */
+const fbMsg = code => ({
+  'auth/invalid-email':     'Please enter a valid email address.',
+  'auth/user-not-found':    'No account found with this email.',
+  'auth/wrong-password':    'Incorrect password.',
+  'auth/too-many-requests': 'Too many attempts. Please wait a moment.',
+  'auth/invalid-credential':'Email or password is incorrect.',
+}[code] || 'Sign in failed. Please check your credentials.');
+
+const showErr  = msg => { const el = document.getElementById('err-box'); el.textContent = msg; el.classList.add('show'); };
+const clearErr = ()  => document.getElementById('err-box').classList.remove('show');
+const showRedirect = () => {
+  document.getElementById('form-wrap').style.display  = 'none';
+  document.getElementById('redirect-msg').style.display = 'block';
+};
+
+/* Handle login */
+document.getElementById('login-btn').addEventListener('click', async () => {
+  clearErr();
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  if (!email || !password) { showErr('Please enter your email and password.'); return; }
+
+  /* Loading state */
+  const btn = document.getElementById('login-btn');
+  document.getElementById('btn-label').style.display = 'none';
+  document.getElementById('spinner').style.display   = 'block';
+  btn.disabled = true;
+
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+
+    /* Verify this account is actually an admin in Firestore */
+    const snap = await getDoc(doc(db, 'registrants', cred.user.uid));
+    const role = snap.exists() ? snap.data().role : null;
+
+    if (role !== 'admin') {
+      /* Signed in but not admin — block and sign back out */
+      const { signOut } = await import(
+        'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js'
+      );
+      await signOut(auth);
+      showErr('This account does not have administrator access.');
+      return;
+    }
+
+    /* ✓ Admin confirmed — redirect */
+    showRedirect();
+    setTimeout(() => { window.location.href = 'admin.html'; }, 800);
+
+  } catch(err) {
+    showErr(fbMsg(err.code));
+  } finally {
+    document.getElementById('btn-label').style.display = 'block';
+    document.getElementById('spinner').style.display   = 'none';
+    btn.disabled = false;
+  }
+});
+
+/* Enter key submits */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+});
+</script>
+</body>
+
+</html>

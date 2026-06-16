@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register — PACTPAN Palaver Series 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .reg-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .reg-info h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: var(--forest-dark);
+      margin: .5rem 0 1rem;
+    }
+
+    .reg-info p {
+      color: var(--text-mid);
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+      font-size: .95rem;
+    }
+
+    .benefits {
+      list-style: none;
+      display: grid;
+      gap: .7rem;
+      margin-top: 1.5rem;
+    }
+
+    .benefits li {
+      display: flex;
+      align-items: start;
+      gap: .8rem;
+      font-size: .88rem;
+      color: var(--text-mid);
+    }
+
+    .benefit-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--forest);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .reg-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 2.5rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+    }
+
+    .reg-card h3 {
+      font-size: 1.4rem;
+      color: var(--forest-dark);
+      margin-bottom: .4rem;
+    }
+
+    .reg-card .card-sub {
+      font-size: .82rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: .75rem;
+      background: none;
+      border: none;
+      font-family: 'Lora', serif;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all .2s;
+    }
+
+    .auth-tab.active {
+      color: var(--forest);
+      border-bottom-color: var(--forest);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .fg {
+      margin-bottom: 1.1rem;
+    }
+
+    .fg label {
+      display: block;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: .35rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .fg input,
+    .fg select,
+    .fg textarea {
+      width: 100%;
+      padding: .72rem 1rem;
+      border: 1px solid rgba(0, 0, 0, .14);
+      border-radius: var(--r);
+      font-family: 'Lora', serif;
+      font-size: .9rem;
+      background: var(--cream);
+      color: var(--text-dark);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    .fg input:focus,
+    .fg select:focus,
+    .fg textarea:focus {
+      border-color: var(--forest);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(30, 77, 43, .08);
+    }
+
+    .fg textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-submit {
+      width: 100%;
+      background: var(--forest);
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      border-radius: var(--r);
+      font-family: 'Lora', serif;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .04em;
+      transition: background .2s;
+      margin-top: .4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+    }
+
+    .form-submit:hover:not(:disabled) {
+      background: var(--forest-mid);
+    }
+
+    .form-submit:disabled {
+      background: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .form-note {
+      font-size: .71rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    .form-err {
+      background: rgba(200, 50, 50, .08);
+      border: 1px solid rgba(200, 50, 50, .3);
+      border-radius: var(--r);
+      padding: .75rem 1rem;
+      font-size: .82rem;
+      color: #b91c1c;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .form-err.show {
+      display: block;
+    }
+
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .success-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-state h3 {
+      font-size: 1.5rem;
+      color: var(--forest-dark);
+      margin-bottom: .8rem;
+    }
+
+    .success-state p {
+      color: var(--text-mid);
+      font-size: .9rem;
+      line-height: 1.8;
+    }
+
+    .pwd-strength {
+      height: 3px;
+      border-radius: 2px;
+      margin-top: .4rem;
+      transition: all .3s;
+      background: transparent;
+    }
+
+    .pwd-strength.weak {
+      background: #ef4444;
+      width: 30%;
+    }
+
+    .pwd-strength.fair {
+      background: #f59e0b;
+      width: 60%;
+    }
+
+    .pwd-strength.strong {
+      background: #22c55e;
+      width: 100%;
+    }
+
+    .pwd-hint {
+      font-size: .68rem;
+      color: var(--text-muted);
+      margin-top: .3rem;
+    }
+
+    @media(max-width:800px) {
+      .reg-layout {
+        grid-template-columns: 1fr
+      }
+
+      .form-row {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="js/data.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero-bg"
+      style="background-image:url('https://images.unsplash.com/photo-1470137237906-d8a4f71e1966?w=1200&q=80')"></div>
+    <div class="page-hero-inner">
+      <span class="eyebrow" style="color:var(--gold-bright)">Registration</span>
+      <h1>Join the PACTPAN Palaver Series</h1>
+      <p>Secure your place and gain full access to all sessions, papers, and the certificate programme.</p>
+    </div>
+    <div class="page-hero-leaf"></div>
+  </div>
+
+  <section class="section" style="background:var(--cream)">
+    <div class="section-inner">
+      <div class="reg-layout">
+        <div class="reg-info">
+          <div class="divider"></div>
+          <span class="eyebrow">Why Register</span>
+          <h2>Six Weeks That Can Transform Your Ministry</h2>
+          <p>Participants are to be chosen by their local ordinaries or major superiors. Register to secure your place
+            and gain full access to all course materials, presentations, and the final certificate.</p>
+          <p>Sessions run every Wednesday from July 23 to August 27, 2026, each lasting two and a half hours via Zoom.
+          </p>
+          <ul class="benefits">
+            <li>
+              <div class="benefit-icon">&#10003;</div><span>Access to all six live formation sessions</span>
+            </li>
+            <li>
+              <div class="benefit-icon">&#10003;</div><span>Full speaker papers — PDF, video, and long-form
+                content</span>
+            </li>
+            <li>
+              <div class="benefit-icon">&#10003;</div><span>Session recordings for registered participants</span>
+            </li>
+            <li>
+              <div class="benefit-icon">&#10003;</div><span>Self-care audit and Vital Church Pastoral Situation
+                Analysis</span>
+            </li>
+            <li>
+              <div class="benefit-icon">&#10003;</div><span>Joint Certificate of Completion upon full attendance</span>
+            </li>
+            <li>
+              <div class="benefit-icon">&#10003;</div><span>Personal dashboard to track your sessions and
+                materials</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="reg-card">
+          <h3>Create Your Account</h3>
+          <p class="card-sub" id="card-sub">Already registered? <a href="#" id="switch-to-login"
+              style="color:var(--forest);font-weight:600">Sign in here</a></p>
+          <div class="auth-tabs" id="auth-tabs">
+            <button class="auth-tab active" id="tab-register">New Registration</button>
+            <button class="auth-tab" id="tab-login">Sign In</button>
+          </div>
+          <div class="form-err" id="form-err"></div>
+
+          <!-- REGISTER -->
+          <form id="register-form" novalidate>
+            <div class="form-row">
+              <div class="fg"><label>First Name *</label><input id="r-fname" type="text" placeholder="e.g. Anthony"
+                  required /></div>
+              <div class="fg"><label>Surname *</label><input id="r-lname" type="text" placeholder="e.g. Akinwale"
+                  required /></div>
+            </div>
+            <div class="fg"><label>Email Address *</label><input id="r-email" type="email" placeholder="your@email.com"
+                required /></div>
+            <div class="fg">
+              <label>Password *</label>
+              <input id="r-password" type="password" placeholder="At least 8 characters" required />
+              <div class="pwd-strength" id="pwd-strength"></div>
+              <div class="pwd-hint" id="pwd-hint"></div>
+            </div>
+            <div class="fg">
+              <label>Title / Designation *</label>
+              <select id="r-title" required>
+                <option value="">Select…</option>
+                <option>Rev. Fr.</option>
+                <option>Most Rev. (Bishop)</option>
+                <option>Cardinal</option>
+                <option>Sr. / Br.</option>
+                <option>Dr.</option>
+                <option>Prof.</option>
+                <option>Mr. / Mrs. / Ms.</option>
+              </select>
+            </div>
+            <div class="fg"><label>Diocese / Religious Congregation / Institution *</label><input id="r-diocese"
+                type="text" placeholder="e.g. Diocese of Lagos" required /></div>
+            <div class="form-row">
+              <div class="fg"><label>Year of Ordination</label><input id="r-ordination" type="number"
+                  placeholder="e.g. 2005" min="1940" max="2026" /></div>
+              <div class="fg">
+                <label>Country</label>
+                <select id="r-country">
+                  <option value="Nigeria" selected>Nigeria</option>
+                  <option>Ghana</option>
+                  <option>Kenya</option>
+                  <option>Uganda</option>
+                  <option>South Africa</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg"><label>Phone Number</label><input id="r-phone" type="tel" placeholder="+234 …" /></div>
+            <div class="fg"><label>How did you hear about the Palaver?</label><input id="r-source" type="text"
+                placeholder="e.g. Bishop's circular, colleague, social media" /></div>
+            <div class="fg"><label>Brief statement of expectations (optional)</label><textarea id="r-expect"
+                placeholder="What do you hope to gain from this formation initiative?"></textarea></div>
+            <button type="submit" class="form-submit" id="reg-btn">
+              <span id="reg-label">Complete Registration</span>
+              <div class="spinner" id="reg-spinner"></div>
+            </button>
+            <p class="form-note">By registering you confirm you are attending with the knowledge of your local ordinary
+              or major superior.</p>
+          </form>
+
+          <!-- LOGIN -->
+          <form id="login-form" novalidate style="display:none">
+            <div class="fg"><label>Email Address *</label><input id="l-email" type="email" placeholder="your@email.com"
+                required /></div>
+            <div class="fg"><label>Password *</label><input id="l-password" type="password" placeholder="Your password"
+                required /></div>
+            <button type="submit" class="form-submit" id="login-btn">
+              <span id="login-label">Sign In</span>
+              <div class="spinner" id="login-spinner"></div>
+            </button>
+            <p class="form-note"><a href="#" id="forgot-pwd" style="color:var(--forest);font-weight:600">Forgot
+                password?</a></p>
+          </form>
+
+          <!-- SUCCESS -->
+          <div class="success-state" id="success-state">
+            <div class="success-icon">&#9989;</div>
+            <h3>Welcome to the Palaver!</h3>
+            <p>Your account has been created and your registration is confirmed.</p>
+            <a href="dashboard.html" class="btn btn-forest" style="display:inline-block;margin-top:1.5rem">Go to My
+              Dashboard &#8594;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { auth, db } from './js/firebase.js';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { doc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+injectShell();
+
+/* TABS */
+const showTab = which => {
+  const isReg = which === 'register';
+  document.getElementById('tab-register').classList.toggle('active', isReg);
+  document.getElementById('tab-login').classList.toggle('active', !isReg);
+  document.getElementById('register-form').style.display = isReg ? '' : 'none';
+  document.getElementById('login-form').style.display    = isReg ? 'none' : '';
+  document.getElementById('form-err').classList.remove('show');
+};
+document.getElementById('tab-register').onclick = () => showTab('register');
+document.getElementById('tab-login').onclick    = () => showTab('login');
+document.getElementById('switch-to-login').onclick = e => { e.preventDefault(); showTab('login'); };
+
+/* AUTO-SWITCH: if arriving from sign-out (?signin=1) open login tab immediately */
+if (new URLSearchParams(location.search).get('signin')) showTab('login');
+
+/* AUTO-REDIRECT: if already signed in, skip this page entirely */
+onAuthStateChanged(auth, user => {
+  if (user) window.location.href = 'dashboard.html';
+});
+
+/* ERROR */
+const showErr  = msg => { const el = document.getElementById('form-err'); el.textContent = msg; el.classList.add('show'); };
+const clearErr = ()  => document.getElementById('form-err').classList.remove('show');
+
+/* PASSWORD STRENGTH */
+document.getElementById('r-password').addEventListener('input', function() {
+  const v = this.value;
+  const bar  = document.getElementById('pwd-strength');
+  const hint = document.getElementById('pwd-hint');
+  if (!v) { bar.className='pwd-strength'; hint.textContent=''; return; }
+  const strong = v.length>=8 && /[A-Z]/.test(v) && /[0-9]/.test(v);
+  const fair   = v.length>=8;
+  bar.className = 'pwd-strength '+(strong?'strong':fair?'fair':'weak');
+  hint.textContent = strong?'✓ Strong':fair?'Add uppercase & numbers':'Too short (min 8)';
+});
+
+/* LOADING STATE */
+const setLoading = (btnId, spinnerId, labelId, on) => {
+  document.getElementById(btnId).disabled = on;
+  document.getElementById(spinnerId).style.display = on ? 'block' : 'none';
+  document.getElementById(labelId).style.display   = on ? 'none'  : 'block';
+};
+
+const fbMsg = code => ({
+  'auth/email-already-in-use': 'This email is already registered — please sign in.',
+  'auth/invalid-email':        'Please enter a valid email address.',
+  'auth/weak-password':        'Password must be at least 6 characters.',
+  'auth/user-not-found':       'No account found with this email.',
+  'auth/wrong-password':       'Incorrect password. Please try again.',
+  'auth/too-many-requests':    'Too many attempts. Please wait a moment.',
+}[code] || 'Something went wrong. Please try again.');
+
+/* REGISTER */
+document.getElementById('register-form').addEventListener('submit', async e => {
+  e.preventDefault(); clearErr();
+  const fname=document.getElementById('r-fname').value.trim();
+  const lname=document.getElementById('r-lname').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const pwd=document.getElementById('r-password').value;
+  const title=document.getElementById('r-title').value;
+  const diocese=document.getElementById('r-diocese').value.trim();
+  if (!fname||!lname||!email||!pwd||!title||!diocese) { showErr('Please fill in all required fields.'); return; }
+  if (pwd.length<8) { showErr('Password must be at least 8 characters.'); return; }
+  setLoading('reg-btn','reg-spinner','reg-label',true);
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pwd);
+    await updateProfile(cred.user, { displayName:`${title} ${fname} ${lname}` });
+    await setDoc(doc(db,'registrants',cred.user.uid), {
+      uid:cred.user.uid, fname, lname, email, title, diocese,
+      phone:document.getElementById('r-phone').value.trim(),
+      ordination:document.getElementById('r-ordination').value||null,
+      country:document.getElementById('r-country').value,
+      source:document.getElementById('r-source').value.trim(),
+      expectations:document.getElementById('r-expect').value.trim(),
+      role:'participant', registeredAt:serverTimestamp(),
+      sessionsAttended:[], papersRead:[]
+    });
+    document.getElementById('register-form').style.display='none';
+    document.getElementById('auth-tabs').style.display='none';
+    document.getElementById('card-sub').style.display='none';
+    document.getElementById('success-state').style.display='block';
+    showToast('Registration successful! Welcome to the Palaver.');
+  } catch(err) { showErr(fbMsg(err.code)); }
+  finally { setLoading('reg-btn','reg-spinner','reg-label',false); }
+});
+
+/* LOGIN */
+document.getElementById('login-form').addEventListener('submit', async e => {
+  e.preventDefault(); clearErr();
+  const email=document.getElementById('l-email').value.trim();
+  const pwd=document.getElementById('l-password').value;
+  if (!email||!pwd) { showErr('Please enter your email and password.'); return; }
+  setLoading('login-btn','login-spinner','login-label',true);
+  try {
+    await signInWithEmailAndPassword(auth, email, pwd);
+    window.location.href='dashboard.html';
+  } catch(err) { showErr(fbMsg(err.code)); }
+  finally { setLoading('login-btn','login-spinner','login-label',false); }
+});
+
+/* FORGOT PASSWORD */
+document.getElementById('forgot-pwd').addEventListener('click', async e => {
+  e.preventDefault();
+  const email=document.getElementById('l-email').value.trim();
+  if (!email) { showErr('Enter your email address above first.'); return; }
+  try { await sendPasswordResetEmail(auth,email); showToast('Password reset email sent. Check your inbox.'); }
+  catch(err) { showErr(fbMsg(err.code)); }
+});
+</script>
+</body>
+
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Speakers - PACTPAN Palaver Series 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .filter-btn {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: .4rem 1.2rem;
+      font-size: .78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'Nunito Sans', sans-serif;
+      color: var(--text-mid);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--forest);
+      color: #fff;
+      border-color: var(--forest);
+    }
+
+    /* ── GRID ── */
+    .speakers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.8rem;
+    }
+
+    /* ── CARD ── */
+    .speaker-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .25s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .speaker-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-6px);
+    }
+
+    /*
+  Avatar container — always 220px tall.
+  Shows photo if available, gradient+initials if not.
+  The <img> and the .sc-initials-layer are stacked;
+  only one is visible at a time.
+*/
+    .sc-avatar {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Gradient sits behind everything — always visible as the bg */
+    .sc-gradient {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sc-initials {
+      font-family: 'Lora', serif;
+      font-size: 4rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .5);
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+
+    /* Decorative circle on gradient fallback */
+    .sc-decor {
+      position: absolute;
+      bottom: -24px;
+      right: -24px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .08);
+      z-index: 2;
+    }
+
+    /* The actual photo — sits on top of gradient */
+    .sc-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      z-index: 3;
+      /* Shown only when image loads successfully */
+      opacity: 1;
+      transition: opacity .3s;
+    }
+
+    /* When photo fails, JS sets display:none — gradient shows through */
+
+    /* Session colour band along bottom of avatar */
+    .sc-session-band {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 4;
+      padding: .35rem .8rem;
+      background: rgba(0, 0, 0, .45);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sc-session-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+    }
+
+    .sc-photo-badge {
+      font-size: .58rem;
+      color: rgba(255, 255, 255, .55);
+      font-style: italic;
+    }
+
+    /* ── INFO PANEL ── */
+    .sc-info {
+      padding: 1.2rem 1.3rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: .25rem;
+    }
+
+    .sc-name {
+      font-family: 'Lora', serif;
+      font-size: .98rem;
+      color: var(--forest-dark);
+      line-height: 1.3;
+      margin-bottom: .1rem;
+    }
+
+    .sc-role {
+      font-size: .73rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .sc-hint {
+      font-size: .7rem;
+      color: var(--gold);
+      font-weight: 600;
+      margin-top: auto;
+      padding-top: .7rem;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    .sc-hint::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    /* ── BIO MODAL ── */
+    .modal-header {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-avatar-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .modal-avatar-gradient {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lora', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .6);
+    }
+
+    .modal-avatar-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      z-index: 2;
+    }
+
+    .modal-name {
+      font-family: 'Lora', serif;
+      font-size: 1.5rem;
+      color: var(--forest-dark);
+      line-height: 1.25;
+    }
+
+    .modal-role {
+      font-size: .83rem;
+      color: var(--text-muted);
+      margin-top: .25rem;
+    }
+
+    .modal-session-tag {
+      display: inline-block;
+      margin-top: .45rem;
+      font-size: .68rem;
+      background: rgba(30, 77, 43, .1);
+      color: var(--forest);
+      padding: .2rem .7rem;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    .modal-bio-text {
+      font-size: .92rem;
+      color: var(--text-mid);
+      line-height: 1.9;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-paper-box {
+      background: var(--cream);
+      border-radius: var(--r);
+      padding: 1.2rem;
+      display: flex;
+      align-items: start;
+      gap: 1rem;
+    }
+
+    .modal-paper-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .modal-paper-title {
+      font-size: .87rem;
+      font-weight: 600;
+      color: var(--forest-dark);
+      margin-bottom: .3rem;
+      line-height: 1.45;
+    }
+
+    .modal-paper-lock {
+      font-size: .8rem;
+      background: var(--earth);
+      color: #fff;
+      padding: .35rem .9rem;
+      border-radius: 20px;
+      display: inline-block;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+
+    .modal-paper-lock:hover {
+      opacity: .85;
+    }
+
+    .modal-paper-btn {
+      display: inline-block;
+      background: var(--forest);
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: .55rem 1.3rem;
+      border-radius: var(--r);
+      text-decoration: none;
+      transition: background .2s;
+    }
+
+    .modal-paper-btn:hover {
+      background: var(--forest-mid);
+    }
+
+    /* ── HOW TO ADD PHOTOS NOTE (admin tip) ── */
+    .photo-tip {
+      background: rgba(184, 134, 11, .08);
+      border: 1px solid rgba(184, 134, 11, .25);
+      border-radius: var(--r);
+      padding: 1rem 1.3rem;
+      font-size: .8rem;
+      color: var(--text-mid);
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    .photo-tip strong {
+      color: var(--forest-dark);
+    }
+
+    .photo-tip code {
+      background: rgba(0, 0, 0, .06);
+      padding: .1rem .4rem;
+      border-radius: 3px;
+      font-size: .75rem;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="page-hero-bg"
+      style="background-image:url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&q=80')"></div>
+    <div class="page-hero-inner">
+      <span class="eyebrow" style="color:var(--gold-bright)">Faculty</span>
+      <h1>Distinguished Speakers &amp; Resource Persons</h1>
+      <p>Bishops, theologians, practitioners, and interdisciplinary scholars speaking from wisdom and experience.</p>
+    </div>
+    <div class="page-hero-leaf"></div>
+  </div>
+
+  <section class="section" style="background:var(--cream)">
+    <div class="section-inner">
+
+      <div class="filter-bar" id="filter-bar"></div>
+      <div class="speakers-grid" id="speakers-grid"></div>
+    </div>
+  </section>
+
+  <!-- BIO MODAL -->
+  <div class="modal-overlay" id="bio-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close">&#10005;</button>
+      <div class="modal-header">
+        <div class="modal-avatar-wrap" id="modal-avatar-wrap">
+          <div class="modal-avatar-gradient" id="modal-avatar-gradient"></div>
+          <img class="modal-avatar-photo" id="modal-avatar-photo" src="" alt="" onerror="this.style.display='none'" />
+        </div>
+        <div class="modal-meta">
+          <div class="modal-name" id="modal-name"></div>
+          <div class="modal-role" id="modal-role"></div>
+          <span class="modal-session-tag" id="modal-session"></span>
+        </div>
+      </div>
+      <p class="modal-bio-text" id="modal-bio"></p>
+      <div class="divider"></div>
+      <p class="eyebrow" style="margin-bottom:1rem">Presentation Paper</p>
+      <div class="modal-paper-box" id="modal-paper-box"></div>
+      <div style="margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid var(--border);text-align:center">
+        <a id="modal-profile-link" href="#"
+          style="font-size:.83rem;font-weight:600;color:var(--forest);display:inline-flex;align-items:center;gap:.4rem">
+          View Full Speaker Profile &#8594;
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script>
+    injectShell();
+  </script>
+  <script type="module" src="js/nav-auth.js"></script>
+
+  <script>
+    /* ── BUILD FILTER BAR ── */
+    const sessionLabels = ['All', ...new Set(SPEAKERS.map(s => s.session))];
+    const fb = document.getElementById('filter-bar');
+    let activeFilter = 'All';
+
+    sessionLabels.forEach(label => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (label === 'All' ? ' active' : '');
+      btn.textContent = label;
+      btn.onclick = () => {
+        activeFilter = label;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderGrid();
+      };
+      fb.appendChild(btn);
+    });
+
+    /* ── BUILD SPEAKER CARD ── */
+    function buildCard(sp, globalIndex) {
+      const card = document.createElement('div');
+      card.className = 'speaker-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', `View bio for ${sp.name}`);
+      card.onclick = () => openBio(globalIndex);
+      card.onkeydown = e => {
+        if (e.key === 'Enter' || e.key === ' ') openBio(globalIndex);
+      };
+
+      /*
+        Avatar logic:
+        - .sc-gradient is always rendered (fallback)
+        - If sp.photo is set, an <img> is rendered on top
+        - If the <img> errors (404, wrong path), onerror hides it → gradient shows through
+        - No blank box ever appears
+      */
+      const hasPhoto = sp.photo && sp.photo.trim() !== '';
+      const photoHTML = hasPhoto ?
+        `<img class="sc-photo" src="${sp.photo}" alt="${sp.name}"
+            loading="lazy"
+            onerror="this.style.display='none';this.previousElementSibling.querySelector('.sc-decor').style.display='block'"
+       />` :
+        '';
+
+      card.innerHTML = `
+    <div class="sc-avatar">
+      <div class="sc-gradient" style="background:linear-gradient(145deg,${sp.color[0]} 0%,${sp.color[1]} 100%)">
+        <span class="sc-initials">${sp.initials}</span>
+        <div class="sc-decor" style="${hasPhoto ? 'display:none' : ''}"></div>
+      </div>
+      ${photoHTML}
+      <div class="sc-session-band">
+        <span class="sc-session-label">${sp.session}</span>
+        ${hasPhoto ? '<span class="sc-photo-badge">photo</span>' : ''}
+      </div>
+    </div>
+    <div class="sc-info">
+      <div class="sc-name">${sp.name}</div>
+      <div class="sc-role">${sp.role.replace(/ — Palaver \d+/, '')}</div>
+      <div class="sc-hint">View bio &amp; paper</div>
+    </div>
+  `;
+      return card;
+    }
+
+    /* ── RENDER GRID ── */
+    function renderGrid() {
+      const grid = document.getElementById('speakers-grid');
+      grid.innerHTML = '';
+      const list = activeFilter === 'All' ?
+        SPEAKERS :
+        SPEAKERS.filter(s => s.session === activeFilter);
+
+      list.forEach(sp => {
+        const globalIdx = SPEAKERS.indexOf(sp);
+        grid.appendChild(buildCard(sp, globalIdx));
+      });
+    }
+    renderGrid();
+
+    /* ── OPEN BIO MODAL ── */
+    function openBio(i) {
+      const sp = SPEAKERS[i];
+
+      /* Avatar in modal */
+      const avatarWrap = document.getElementById('modal-avatar-wrap');
+      avatarWrap.style.background = `linear-gradient(145deg,${sp.color[0]},${sp.color[1]})`;
+      document.getElementById('modal-avatar-gradient').textContent = sp.initials;
+
+      const photoEl = document.getElementById('modal-avatar-photo');
+      if (sp.photo) {
+        photoEl.src = sp.photo;
+        photoEl.style.display = '';
+        photoEl.onerror = () => {
+          photoEl.style.display = 'none';
+        };
+      } else {
+        photoEl.src = '';
+        photoEl.style.display = 'none';
+      }
+
+      document.getElementById('modal-name').textContent = sp.name;
+      document.getElementById('modal-role').textContent = sp.role.replace(/ — Palaver \d+/, '');
+      document.getElementById('modal-session').textContent = sp.session;
+      document.getElementById('modal-bio').textContent = sp.bio;
+      /* Paper section — auth-aware */
+      const isSignedIn = !!window.__pactpanUser;
+      const paperLink = 'paper.html?title=' + encodeURIComponent(sp.paper);
+
+      let paperAction = '';
+      if (isSignedIn) {
+        paperAction = '<a href="' + paperLink + '" class="modal-paper-btn">Read Paper &rarr;</a>';
+      } else {
+        paperAction = '<a href="register.html" class="modal-paper-lock">&#128274; Register to read this paper</a>';
+      }
+
+      document.getElementById('modal-paper-box').innerHTML =
+        '<div class="modal-paper-icon">&#128196;</div>' +
+        '<div style="flex:1">' +
+        '<div class="modal-paper-title">' + sp.paper + '</div>' +
+        '<div style="margin-top:.6rem">' + paperAction + '</div>' +
+        '</div>';
+
+      /* View Full Profile link */
+      document.getElementById('modal-profile-link').href = 'speaker.html?id=' + i;
+
+      document.getElementById('bio-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    /* ── CLOSE MODAL ── */
+    document.getElementById('modal-close').onclick = closeBio;
+    document.getElementById('bio-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeBio();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeBio();
+    });
+
+    function closeBio() {
+      document.getElementById('bio-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ── TRACK AUTH STATE for paper button ── */
+  </script>
+
+  <script type="module">
+    import { auth } from './js/firebase.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+onAuthStateChanged(auth, user => {
+  window.__pactpanUser = user || null;
+});
+</script>
+</body>
+
+</html>

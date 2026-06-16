@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin — PACTPAN Palaver Series 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/adminstyles.css" />
+</head>
+
+<body>
+    <script src="js/data.js"></script>
+
+    <div class="toast" id="toast"></div>
+    <div class="mob-overlay" id="mob-overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-title">PACTPAN Admin</div>
+            <div class="sidebar-brand-sub">Palaver Series 2026</div>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="sec">Overview</li>
+            <li><a href="#" class="active" data-panel="overview"><span class="ico">▣</span> Dashboard</a></li>
+            <li class="sec">People</li>
+            <li><a href="#" data-panel="registrants"><span class="ico">👥</span> Registrants</a></li>
+            <li><a href="#" data-panel="speakers-admin"><span class="ico">🎤</span> Speakers</a></li>
+            <li class="sec">Content</li>
+            <li><a href="#" data-panel="upload"><span class="ico">📤</span> Upload Paper</a></li>
+            <li><a href="#" data-panel="papers"><span class="ico">📄</span> All Papers</a></li>
+        </ul>
+        <button class="sidebar-signout" id="btn-signout">🔓 Sign Out</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="mob-bar">
+            <button class="mob-menu-btn" id="mob-menu-btn">☰</button>
+            <span class="mob-bar-title">PACTPAN Admin</span>
+        </div>
+
+        <div class="topbar">
+            <div class="topbar-left">
+                <h1>Admin Panel</h1>
+                <p id="admin-email">Verifying access…</p>
+            </div>
+            <span class="admin-chip">▲ Administrator</span>
+        </div>
+
+        <!-- ── OVERVIEW ── -->
+        <div class="panel active" id="panel-overview">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-n" id="s-total">—</div>
+                    <div class="stat-l">Total Registrants</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-n" id="s-nigeria">—</div>
+                    <div class="stat-l">From Nigeria</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-n" id="s-priests">—</div>
+                    <div class="stat-l">Rev. Fathers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-n" id="s-papers">—</div>
+                    <div class="stat-l">Papers Published</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── REGISTRANTS ── -->
+        <div class="panel" id="panel-registrants">
+            <div class="table-card">
+                <div class="table-toolbar">
+                    <strong>Registered Participants</strong>
+                    <input class="tsearch" id="tsearch" placeholder="🔍 Search name, diocese, country…" />
+                    <button class="btn btn-sm btn-ghost" id="btn-export">↓ Export CSV</button>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="tbl">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Title</th>
+                                <th>Diocese / Institution</th>
+                                <th>Country</th>
+                                <th>Ordination</th>
+                                <th>Registered</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reg-tbody">
+                            <tr>
+                                <td colspan="8" class="tbl-empty">Loading…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── SPEAKERS ADMIN ── -->
+        <div class="panel" id="panel-speakers-admin" style="display:none">
+            <div class="speakers-panel-header">
+                <div>
+                    <h2>Speakers</h2>
+                    <p>Manage speaker profiles, contact details, and social links. Changes save to Firestore.</p>
+                </div>
+            </div>
+            <div class="sp-admin-grid" id="speakers-admin-list">
+                <p style="color:#94a3b8;font-size:.88rem">Loading speakers…</p>
+            </div>
+        </div>
+
+        <!-- ── UPLOAD PAPER ── -->
+        <div class="panel" id="panel-upload">
+            <div class="upload-card">
+                <h3>📤 Upload Paper</h3>
+                <div class="success-msg" id="upload-ok">✓ Paper published successfully!</div>
+
+                <div class="fg">
+                    <label>Select Paper *</label>
+                    <select id="up-paper-select">
+                        <option value="">— Choose a paper to upload —</option>
+                    </select>
+                    <p id="up-already-msg"
+                        style="display:none;margin-top:.5rem;font-size:.78rem;color:#ef4444;font-weight:600">
+                        ⚠ This paper has already been uploaded. Manage it in All Papers.
+                    </p>
+                </div>
+                <div class="two-col">
+                    <div class="fg"><label>Paper Title <span
+                                style="font-size:.65rem;color:#94a3b8">(auto-filled)</span></label><input id="up-title"
+                            readonly style="background:#f8fafc;color:#475569;cursor:default"
+                            placeholder="Select a paper above" /></div>
+                    <div class="fg"><label>Author <span
+                                style="font-size:.65rem;color:#94a3b8">(auto-filled)</span></label><input id="up-author"
+                            readonly style="background:#f8fafc;color:#475569;cursor:default"
+                            placeholder="Select a paper above" /></div>
+                </div>
+                <div class="two-col">
+                    <div class="fg"><label>Session <span
+                                style="font-size:.65rem;color:#94a3b8">(auto-filled)</span></label><input
+                            id="up-session" readonly style="background:#f8fafc;color:#475569;cursor:default"
+                            placeholder="Select a paper above" /></div>
+                    <div class="fg">
+                        <label>Access</label>
+                        <select id="up-access">
+                            <option value="gated">Registered participants only</option>
+                            <option value="open">Open access (public)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="fg">
+                    <label>Content Type</label>
+                    <div class="ct-tabs">
+                        <button class="ct-tab active" data-ct="pdf">📄 PDF</button>
+                        <button class="ct-tab" data-ct="video">🎬 Video</button>
+                        <button class="ct-tab" data-ct="text">📝 Long-form Text</button>
+                    </div>
+
+                    <div class="ct-panel active" id="ct-pdf">
+                        <div class="drop-zone" id="drop-zone">
+                            <div class="drop-icon">📄</div>
+                            <div class="drop-text"><strong>Click to choose PDF</strong> or drag &amp; drop</div>
+                            <div class="drop-text" style="font-size:.74rem;margin-top:.3rem">Max 50 MB</div>
+                        </div>
+                        <input type="file" id="file-input" accept=".pdf" style="display:none" />
+                        <div class="file-selected" id="file-selected"></div>
+                        <div class="upload-bar-wrap" id="upload-bar-wrap">
+                            <div class="upload-bar" id="upload-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="ct-panel" id="ct-video">
+                        <div class="fg" style="margin:0"><label>Video URL (YouTube / Vimeo / MP4)</label><input
+                                id="up-video-url" type="url" placeholder="https://www.youtube.com/watch?v=…" /></div>
+                        <div class="fg" style="margin-top:1rem"><label>Video Description</label><textarea
+                                id="up-video-desc" placeholder="Brief description of the video content…"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="ct-panel" id="ct-text">
+                        <div class="editor-toolbar">
+                            <button type="button" class="tb-btn" data-cmd="bold" title="Bold"><b>B</b></button>
+                            <button type="button" class="tb-btn" data-cmd="italic" title="Italic"><i>I</i></button>
+                            <button type="button" class="tb-btn" data-cmd="underline"
+                                title="Underline"><u>U</u></button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" data-cmd="h2" title="Heading 2">H2</button>
+                            <button type="button" class="tb-btn" data-cmd="h3" title="Heading 3">H3</button>
+                            <button type="button" class="tb-btn" data-cmd="p" title="Paragraph">¶</button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" data-cmd="insertUnorderedList" title="Bullet list">•
+                                List</button>
+                            <button type="button" class="tb-btn" data-cmd="insertOrderedList" title="Numbered list">1.
+                                List</button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" data-cmd="blockquote" title="Blockquote">❝</button>
+                            <button type="button" class="tb-btn" data-cmd="removeFormat" title="Clear formatting">✕
+                                Clear</button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" id="tb-link" title="Insert link">🔗 Link</button>
+                            <button type="button" class="tb-btn" id="tb-html-toggle" title="View/edit raw HTML">⟨/⟩
+                                HTML</button>
+                        </div>
+                        <div id="up-editor" class="rich-editor" contenteditable="true"
+                            data-placeholder="Start typing the paper content here…"></div>
+                        <textarea id="up-body" style="display:none"></textarea>
+                        <p style="font-size:.72rem;color:#94a3b8;margin-top:.5rem">Tip: Paste from Word or Google Docs.
+                            Switch to ⟨/⟩ to edit raw HTML.</p>
+                    </div>
+                </div>
+
+                <div class="fg"><label>Abstract / Summary</label><textarea id="up-abstract"
+                        placeholder="Short description shown on the Papers listing page…"></textarea></div>
+
+                <button class="btn" id="btn-publish" disabled style="opacity:.6">
+                    <span id="publish-label">Select a paper above to enable</span>
+                    <span class="spin" id="publish-spin"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ── ALL PAPERS ── -->
+        <div class="panel" id="panel-papers">
+            <div id="papers-list">
+                <p style="color:#94a3b8;font-size:.88rem">Loading papers…</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ── SPEAKER EDIT MODAL ── -->
+    <div class="modal-overlay" id="sp-edit-overlay" style="z-index:600">
+        <div class="modal-box" style="max-width:560px">
+            <button class="modal-close" id="sp-edit-close">&#10005;</button>
+            <h3 style="font-family:'Lora',serif;font-size:1.3rem;color:#1e293b;margin-bottom:1.5rem">Edit Speaker
+                Profile</h3>
+            <input type="hidden" id="sp-edit-idx" />
+            <form id="sp-edit-form">
+                <div style="display:grid;gap:.9rem">
+                    <div class="fg"><label>Name (read-only)</label><input id="sp-edit-name" readonly
+                            style="background:#f8fafc;color:#475569" /></div>
+                    <div class="fg"><label>Role / Title</label><input id="sp-edit-role" /></div>
+                    <div class="fg">
+                        <label
+                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem">
+                            <span>Biography</span>
+                            <button type="button" id="sp-bio-fullscreen-btn" title="Fullscreen editor"
+                                style="background:none;border:1px solid #e2e8f0;border-radius:5px;padding:.25rem .6rem;cursor:pointer;font-size:.72rem;color:#64748b;display:flex;align-items:center;gap:.3rem;font-family:inherit">
+                                &#9974; Fullscreen
+                            </button>
+                        </label>
+                        <div class="editor-toolbar" id="sp-bio-toolbar"
+                            style="border-radius:var(--r-lg) var(--r-lg) 0 0">
+                            <button type="button" class="tb-btn" data-sp-cmd="bold" title="Bold"><b>B</b></button>
+                            <button type="button" class="tb-btn" data-sp-cmd="italic" title="Italic"><i>I</i></button>
+                            <button type="button" class="tb-btn" data-sp-cmd="underline"
+                                title="Underline"><u>U</u></button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" data-sp-cmd="h2" title="Heading 2">H2</button>
+                            <button type="button" class="tb-btn" data-sp-cmd="h3" title="Heading 3">H3</button>
+                            <button type="button" class="tb-btn" data-sp-cmd="p" title="Paragraph">P</button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" data-sp-cmd="insertUnorderedList" title="Bullet list">•
+                                List</button>
+                            <button type="button" class="tb-btn" data-sp-cmd="insertOrderedList"
+                                title="Numbered list">1. List</button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" data-sp-cmd="blockquote"
+                                title="Blockquote">&#10075;</button>
+                            <button type="button" class="tb-btn" data-sp-cmd="removeFormat"
+                                title="Clear formatting">&#10005;</button>
+                            <span class="tb-sep"></span>
+                            <button type="button" class="tb-btn" id="sp-bio-link-btn"
+                                title="Insert link">&#128279;</button>
+                            <button type="button" class="tb-btn" id="sp-bio-html-toggle"
+                                title="Toggle HTML source">&#8826;/&#8827;</button>
+                        </div>
+                        <div id="sp-bio-editor" class="rich-editor" contenteditable="true"
+                            data-placeholder="Write the speaker biography here…"
+                            style="min-height:180px;border-radius:0 0 var(--r-lg) var(--r-lg)"></div>
+                        <textarea id="sp-edit-bio" style="display:none"></textarea>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+                        <div class="fg"><label>Email</label><input id="sp-edit-email" type="email"
+                                placeholder="speaker@example.com" /></div>
+                        <div class="fg"><label>Twitter / X handle</label><input id="sp-edit-twitter"
+                                placeholder="username (no @)" /></div>
+                        <div class="fg"><label>LinkedIn handle</label><input id="sp-edit-linkedin"
+                                placeholder="username" /></div>
+                        <div class="fg"><label>Website URL</label><input id="sp-edit-website" placeholder="https://…" />
+                        </div>
+                    </div>
+                    <div class="fg">
+                        <label>Photo URL or local path</label>
+                        <input id="sp-edit-photo" placeholder="images/speakers/name.jpg or https://…" />
+                        <p style="font-size:.7rem;color:#94a3b8;margin-top:.3rem">Drop file into
+                            <code>images/speakers/</code> first, then enter the path here.</p>
+                    </div>
+                </div>
+                <button type="submit" class="btn" style="margin-top:1.5rem;width:100%">Save Speaker Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script type="module" src="js/firebase-app.js"></script>
+</body>
+
+</html>
