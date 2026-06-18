@@ -458,11 +458,6 @@ document.getElementById('switch-to-login').onclick = e => { e.preventDefault(); 
 /* AUTO-SWITCH: if arriving from sign-out (?signin=1) open login tab immediately */
 if (new URLSearchParams(location.search).get('signin')) showTab('login');
 
-/* AUTO-REDIRECT: if already signed in, skip this page entirely */
-onAuthStateChanged(auth, user => {
-  if (user) window.location.href = 'dashboard.html';
-});
-
 /* ERROR */
 const showErr  = msg => { const el = document.getElementById('form-err'); el.textContent = msg; el.classList.add('show'); };
 const clearErr = ()  => document.getElementById('form-err').classList.remove('show');
@@ -495,38 +490,60 @@ const fbMsg = code => ({
   'auth/too-many-requests':    'Too many attempts. Please wait a moment.',
 }[code] || 'Something went wrong. Please try again.');
 
+let justRegistered = false;
+
+/* AUTO-REDIRECT: only if ALREADY signed in on page load, not during registration */
+onAuthStateChanged(auth, user => {
+  if (user && !justRegistered) window.location.href = 'dashboard.html';
+});
+
 /* REGISTER */
 document.getElementById('register-form').addEventListener('submit', async e => {
   e.preventDefault(); clearErr();
-  const fname=document.getElementById('r-fname').value.trim();
-  const lname=document.getElementById('r-lname').value.trim();
-  const email=document.getElementById('r-email').value.trim();
-  const pwd=document.getElementById('r-password').value;
-  const title=document.getElementById('r-title').value;
-  const diocese=document.getElementById('r-diocese').value.trim();
-  if (!fname||!lname||!email||!pwd||!title||!diocese) { showErr('Please fill in all required fields.'); return; }
-  if (pwd.length<8) { showErr('Password must be at least 8 characters.'); return; }
-  setLoading('reg-btn','reg-spinner','reg-label',true);
+  const fname   = document.getElementById('r-fname').value.trim();
+  const lname   = document.getElementById('r-lname').value.trim();
+  const email   = document.getElementById('r-email').value.trim();
+  const pwd     = document.getElementById('r-password').value;
+  const title   = document.getElementById('r-title').value;
+  const diocese = document.getElementById('r-diocese').value.trim();
+  if (!fname||!lname||!email||!pwd||!title||!diocese) {
+    showErr('Please fill in all required fields.'); return;
+  }
+  if (pwd.length < 8) {
+    showErr('Password must be at least 8 characters.'); return;
+  }
+
+  justRegistered = true; // ← block onAuthStateChanged from redirecting mid-write
+  setLoading('reg-btn','reg-spinner','reg-label', true);
+
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pwd);
-    await updateProfile(cred.user, { displayName:`${title} ${fname} ${lname}` });
-    await setDoc(doc(db,'registrants',cred.user.uid), {
-      uid:cred.user.uid, fname, lname, email, title, diocese,
-      phone:document.getElementById('r-phone').value.trim(),
-      ordination:document.getElementById('r-ordination').value||null,
-      country:document.getElementById('r-country').value,
-      source:document.getElementById('r-source').value.trim(),
-      expectations:document.getElementById('r-expect').value.trim(),
-      role:'participant', registeredAt:serverTimestamp(),
-      sessionsAttended:[], papersRead:[]
+    await updateProfile(cred.user, { displayName: `${title} ${fname} ${lname}` });
+    await setDoc(doc(db, 'registrants', cred.user.uid), {
+      uid:          cred.user.uid,
+      fname, lname, email, title, diocese,
+      phone:        document.getElementById('r-phone').value.trim(),
+      ordination:   document.getElementById('r-ordination').value || null,
+      country:      document.getElementById('r-country').value,
+      source:       document.getElementById('r-source').value.trim(),
+      expectations: document.getElementById('r-expect').value.trim(),
+      role:         'participant',
+      registeredAt: serverTimestamp(),
+      sessionsAttended: [],
+      papersRead:       []
     });
-    document.getElementById('register-form').style.display='none';
-    document.getElementById('auth-tabs').style.display='none';
-    document.getElementById('card-sub').style.display='none';
-    document.getElementById('success-state').style.display='block';
+    // setDoc fully complete — now safe to show success
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('auth-tabs').style.display     = 'none';
+    document.getElementById('card-sub').style.display      = 'none';
+    document.getElementById('success-state').style.display = 'block';
     showToast('Registration successful! Welcome to the Palaver.');
-  } catch(err) { showErr(fbMsg(err.code)); }
-  finally { setLoading('reg-btn','reg-spinner','reg-label',false); }
+  } catch(err) {
+    justRegistered = false; // reset flag so normal auth still works
+    showErr(fbMsg(err.code));
+  } finally {
+    setLoading('reg-btn','reg-spinner','reg-label', false);
+  }
 });
 
 /* LOGIN */
